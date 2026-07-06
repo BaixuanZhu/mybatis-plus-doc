@@ -505,7 +505,7 @@ mybatis-plus:
 
 全局默认主键类型。
 
-- `IdType.AUTO`：使用数据库自增 ID 作为主键。
+- `IdType.AUTO`：使用数据库自增 ID 作为主键。【该策略保存前手动设置ID无效且会被自动生成的ID回写，正确用法是保存对象插入成功后拿到自动生成的ID，然后再去关联业务使用】
 - `IdType.NONE`：无特定生成策略，如果全局配置中有 IdType 相关的配置，则会跟随全局配置。
 - `IdType.INPUT`：在插入数据前，由用户自行设置主键值。
 - `IdType.ASSIGN_ID`：自动分配 `ID`，适用于 `Long`、`Integer`、`String` 类型的主键。默认使用雪花算法通过 `IdentifierGenerator` 的 `nextId` 实现。<Badge text="@since 3.3.0"/>
