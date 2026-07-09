@@ -191,6 +191,59 @@ lambdaQueryWrapper.eq(User::getName, "老王");
 SELECT * FROM user WHERE name = '老王'
 ```
 
+### eqOrIsNull <Badge text="Since 3.5.17" type="error"/>
+
+`eqOrIsNull` 相当于 `eq + is null` 等于 = ，值为 null 时自动转为 IS NULL。
+
+#### 使用范围
+
+- `QueryWrapper`
+- `LambdaQueryWrapper`
+- `UpdateWrapper`
+- `LambdaUpdateWrapper`
+
+#### 方法签名
+
+```java
+// 设置指定字段的相等条件
+eqOrIsNull(R column, Object val)
+
+// 根据条件设置指定字段的相等条件
+eqOrIsNull(boolean condition, R column, Object val)
+```
+
+#### 参数说明
+
+- `column`：数据库字段名或使用 `Lambda` 表达式的字段名。
+- `val`：与字段名对应的值。
+- `condition`：一个布尔值，用于控制是否应用这个相等条件。
+
+#### 示例
+
+**普通 Wrapper (`QueryWrapper`)**：
+
+```java
+QueryWrapper<Product> queryWrapper = new QueryWrapper<>();
+queryWrapper.eqOrIsNull("name", "可乐饼干");
+```
+
+**Lambda Wrapper (`LambdaQueryWrapper`)**：
+
+```java
+LambdaQueryWrapper<Product> lambdaQueryWrapper = new LambdaQueryWrapper<>();
+lambdaQueryWrapper.eqOrIsNull(Product::getName, null);
+```
+
+**生成的 SQL**
+
+```sql
+-- 普通 Wrapper
+SELECT * FROM product WHERE name = '可乐饼干'
+
+-- Lambda Wrapper
+SELECT * FROM product WHERE name is null
+```
+
 ### ne
 
 `ne` 方法是 MyBatis-Plus 中用于构建查询条件的基本方法之一，它用于设置单个字段的不相等条件。
