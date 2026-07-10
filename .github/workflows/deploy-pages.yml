@@ -1,0 +1,63 @@
+# 自动部署到 GitHub Pages
+
+name: Deploy to GitHub Pages
+
+on:
+  push:
+    branches: [master]
+    paths:
+      - 'llm-wiki/**'
+      - '.github/workflows/deploy-pages.yml'
+  workflow_dispatch:
+  schedule:
+    # 每周一自动重新爬取（官网内容可能更新）
+    - cron: '0 3 * * 1'
+
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      pages: write
+      id-token: write
+    concurrency:
+      group: pages
+      cancel-in-progress: false
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          sparse-checkout: |
+            .github
+            llm-wiki
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: Install dependencies
+        run: npm install
+
+      - name: Generate docs (crawl baomidou.com)
+        run: node llm-wiki/scripts/generate-llms.js
+
+      - name: Build site
+        run: |
+          mkdir -p _site
+          cp -r llm-wiki/. _site/
+          cp -r docs _site/docs
+
+      - name: Setup Pages
+        uses: actions/configure-pages@v4
+
+      - name: Upload artifact
+        uses: actions/upload-pages-artifact@v3
+
+      - name: Deploy
+        id: deployment
+        uses: actions/deploy-pages@v4

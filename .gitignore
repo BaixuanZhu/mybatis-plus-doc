@@ -32,3 +32,6 @@ translation-plugin/cache/
 translation-plugin/logs/
 translation-plugin/temp/
 *.log
+
+# LLM Wiki generated docs
+docs/

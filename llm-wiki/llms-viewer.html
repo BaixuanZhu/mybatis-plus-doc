@@ -1,0 +1,571 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>MyBatis-Plus llms.txt 查看器</title>
+  <style>
+    :root {
+      --primary: #409EFF;
+      --primary-light: #ecf5ff;
+      --bg: #f8f9fa;
+      --card-bg: #fff;
+      --border: #eaecef;
+      --text: #2c3e50;
+      --text-light: #666;
+      --text-muted: #999;
+      --code-bg: #f6f8fa;
+      --radius: 8px;
+    }
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      line-height: 1.6;
+    }
+    a { color: var(--primary); text-decoration: none; }
+    a:hover { text-decoration: underline; }
+
+    .header {
+      background: var(--card-bg);
+      border-bottom: 1px solid var(--border);
+      padding: 24px 24px 20px;
+    }
+    .header-top {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 4px;
+    }
+    .header-logo {
+      width: 36px;
+      height: 36px;
+      border-radius: 8px;
+    }
+    .header h1 {
+      font-size: 24px;
+      font-weight: 700;
+    }
+    .header-back {
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      font-size: 13px;
+      color: var(--primary);
+      text-decoration: none;
+      padding: 2px 0;
+      margin-bottom: 10px;
+    }
+    .header-back:hover { text-decoration: underline; }
+    .header .desc {
+      color: var(--text-light);
+      font-size: 14px;
+      margin-bottom: 12px;
+      max-width: 800px;
+    }
+    .header .desc p { margin-bottom: 4px; }
+    .stats {
+      display: flex;
+      gap: 24px;
+      flex-wrap: wrap;
+    }
+    .stat {
+      background: var(--primary-light);
+      color: var(--primary);
+      padding: 4px 14px;
+      border-radius: 20px;
+      font-size: 13px;
+      font-weight: 600;
+    }
+
+    .tabs {
+      display: flex;
+      align-items: center;
+      background: var(--card-bg);
+      border-bottom: 1px solid var(--border);
+      padding: 0 24px;
+      position: sticky;
+      top: 0;
+      z-index: 100;
+    }
+    .tab-btn {
+      padding: 12px 20px;
+      border: none;
+      background: none;
+      cursor: pointer;
+      font-size: 14px;
+      font-weight: 500;
+      color: var(--text-muted);
+      border-bottom: 2px solid transparent;
+      transition: all 0.2s;
+    }
+    .tab-btn:hover { color: var(--text); }
+    .tab-btn.active {
+      color: var(--primary);
+      border-bottom-color: var(--primary);
+    }
+    .tabs .spacer { flex: 1; }
+
+    .index-view {
+      display: flex;
+      min-height: calc(100vh - 260px);
+    }
+    .index-sidebar {
+      width: 220px;
+      flex-shrink: 0;
+      background: var(--card-bg);
+      border-right: 1px solid var(--border);
+      padding: 12px 0;
+      overflow-y: auto;
+    }
+    .index-content {
+      flex: 1;
+      padding: 24px 32px;
+      min-width: 0;
+    }
+    .sidebar-group-btn {
+      display: flex;
+      align-items: center;
+      width: 100%;
+      padding: 8px 20px;
+      border: none;
+      background: none;
+      cursor: pointer;
+      font-size: 13px;
+      color: var(--text);
+      text-align: left;
+      transition: background 0.15s;
+      gap: 8px;
+    }
+    .sidebar-group-btn:hover { background: var(--bg); }
+    .sidebar-group-btn.active {
+      background: var(--primary-light);
+      color: var(--primary);
+      font-weight: 600;
+    }
+    .sidebar-group-btn .dot {
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      background: var(--primary);
+      flex-shrink: 0;
+      opacity: 0;
+      transition: opacity 0.15s;
+    }
+    .sidebar-group-btn.active .dot { opacity: 1; }
+    .sidebar-group-btn .count {
+      margin-left: auto;
+      font-size: 11px;
+      color: var(--text-muted);
+      font-weight: 400;
+    }
+    .content-section-title {
+      font-size: 18px;
+      font-weight: 700;
+      margin-bottom: 16px;
+      padding-bottom: 10px;
+      border-bottom: 2px solid var(--border);
+    }
+    .doc-link {
+      display: flex;
+      align-items: center;
+      padding: 7px 0;
+      font-size: 14px;
+      color: var(--text);
+      transition: color 0.15s;
+      border-bottom: 1px solid var(--bg);
+    }
+    .doc-link:last-child { border-bottom: none; }
+    .doc-link:hover {
+      color: var(--primary);
+      text-decoration: none;
+    }
+    .doc-link .path {
+      color: var(--text-muted);
+      font-size: 12px;
+      font-family: 'SF Mono', Consolas, monospace;
+      margin-left: auto;
+      padding-left: 12px;
+    }
+    .index-view .loading {
+      flex: 1;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .full-view {
+      padding: 16px 24px;
+    }
+    .search-box {
+      width: 100%;
+      padding: 10px 16px;
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      font-size: 14px;
+      outline: none;
+      transition: border-color 0.2s;
+      margin-bottom: 16px;
+    }
+    .search-box:focus { border-color: var(--primary); }
+    .full-text-container {
+      background: var(--code-bg);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      overflow: hidden;
+    }
+    .full-text {
+      padding: 16px 20px;
+      font-family: 'SF Mono', 'Fira Code', Consolas, monospace;
+      font-size: 13px;
+      line-height: 1.5;
+      white-space: pre-wrap;
+      word-break: break-word;
+      max-height: 75vh;
+      overflow-y: auto;
+      color: var(--text);
+    }
+    .full-text .line-h1 { color: #1a1a1a; font-weight: 700; font-size: 15px; }
+    .full-text .line-h2 { color: var(--primary); font-weight: 600; margin-top: 8px; }
+    .full-text .line-h3 { color: #555; font-weight: 600; }
+    .full-text .line-bq { color: var(--text-muted); font-style: italic; }
+    .full-text .line-link a { color: #4078c0; }
+    .full-text mark { background: #fff3a0; padding: 0 2px; border-radius: 2px; }
+    .full-text .line-hidden { display: none; }
+
+    .loading {
+      text-align: center;
+      padding: 40px;
+      color: var(--text-muted);
+      font-size: 14px;
+    }
+    .loading .spinner {
+      display: inline-block;
+      width: 24px;
+      height: 24px;
+      border: 3px solid var(--border);
+      border-top-color: var(--primary);
+      border-radius: 50%;
+      animation: spin 0.8s linear infinite;
+      margin-bottom: 12px;
+    }
+    @keyframes spin { to { transform: rotate(360deg); } }
+
+    @media (max-width: 768px) {
+      .index-view { flex-direction: column; }
+      .index-sidebar { width: 100%; border-right: none; border-bottom: 1px solid var(--border); }
+    }
+  </style>
+</head>
+<body>
+
+<div class="header">
+  <a class="header-back" href="./">&larr; 返回 LLM Wiki 首页</a>
+  <div class="header-top">
+    <img class="header-logo" src="logo.png" alt="MyBatis-Plus" onerror="this.style.display='none'">
+    <h1>MyBatis-Plus llms.txt 查看器</h1>
+  </div>
+  <div class="desc" id="desc"></div>
+  <div class="stats" id="stats"></div>
+</div>
+
+<div class="tabs">
+  <button class="tab-btn active" data-tab="index">📋 索引视图</button>
+  <button class="tab-btn" data-tab="full">📄 全文视图</button>
+  <div class="spacer"></div>
+</div>
+
+<div id="index-view" class="index-view">
+  <div class="loading" id="index-loading"><div class="spinner"></div><br>加载 llms.txt...</div>
+</div>
+
+<div id="full-view" class="full-view" style="display:none">
+  <input class="search-box" id="search-box" type="search" placeholder="搜索全文内容..." />
+  <div class="full-text-container">
+    <pre class="full-text" id="full-text"><div class="loading"><div class="spinner"></div><br>加载 llms-full.txt...</div></pre>
+  </div>
+</div>
+
+<script>
+(function() {
+  'use strict';
+
+  let llmsTxtContent = null;
+  let llmsFullContent = null;
+  let parsedData = null;
+
+  function parseLlmsTxt(text) {
+    var lines = text.split('\n');
+    var result = {
+      title: '',
+      descriptions: [],
+      groups: []
+    };
+
+    var currentGroup = null;
+
+    for (var i = 0; i < lines.length; i++) {
+      var line = lines[i];
+
+      if (/^# /.test(line)) {
+        result.title = line.replace(/^# /, '').trim();
+        continue;
+      }
+
+      if (/^> /.test(line)) {
+        result.descriptions.push(line.replace(/^> /, '').trim());
+        continue;
+      }
+
+      if (/^## /.test(line)) {
+        var groupName = line.replace(/^## /, '').trim();
+        currentGroup = { name: groupName, items: [] };
+        result.groups.push(currentGroup);
+        continue;
+      }
+
+      if (/^\s*- \[/.test(line) && currentGroup) {
+        var match = line.match(/\[([^\]]+)\]\(([^)]+)\)/);
+        if (match) {
+          // Parse: docs/getting-started/install.md → getting-started/install
+          var path = match[2];
+          path = path.replace(/^docs\//, '').replace(/\.md$/, '');
+          currentGroup.items.push({
+            title: match[1],
+            path: path,
+            rawPath: match[2]
+          });
+        }
+        continue;
+      }
+    }
+
+    return result;
+  }
+
+  function renderIndex(data) {
+    var descEl = document.getElementById('desc');
+    if (data.descriptions.length > 0) {
+      descEl.innerHTML = data.descriptions
+        .map(function(d) { return '<p>' + escapeHtml(d) + '</p>'; })
+        .join('');
+    }
+
+    var totalDocs = data.groups.reduce(function(s, g) { return s + g.items.length; }, 0);
+    var totalGroups = data.groups.length;
+    var statsEl = document.getElementById('stats');
+    statsEl.innerHTML =
+      '<span class="stat">' + totalGroups + ' 个分组</span>' +
+      '<span class="stat">' + totalDocs + ' 篇文档</span>' +
+      '<span class="stat" id="full-size-stat">全文加载中...</span>';
+
+    var container = document.getElementById('index-view');
+    var allGroups = data.groups;
+
+    var sidebarHtml = '';
+    for (var i = 0; i < data.groups.length; i++) {
+      var group = data.groups[i];
+      sidebarHtml +=
+        '<button class="sidebar-group-btn" data-idx="' + i + '">' +
+        '<span class="dot"></span>' +
+        escapeHtml(group.name) +
+        '<span class="count">' + group.items.length + '</span>' +
+        '</button>';
+    }
+
+    container.innerHTML =
+      '<nav class="index-sidebar">' + sidebarHtml + '</nav>' +
+      '<main class="index-content" id="index-content"></main>';
+
+    var buttons = container.querySelectorAll('.sidebar-group-btn');
+    for (var b = 0; b < buttons.length; b++) {
+      (function(btn) {
+        btn.addEventListener('click', function() {
+          var idx = parseInt(this.getAttribute('data-idx'));
+          selectGroup(idx, allGroups);
+        });
+      })(buttons[b]);
+    }
+
+    if (allGroups.length > 0) {
+      selectGroup(0, allGroups);
+    }
+  }
+
+  function selectGroup(idx, allGroups) {
+    var container = document.getElementById('index-view');
+    var allBtns = container.querySelectorAll('.sidebar-group-btn');
+    for (var b = 0; b < allBtns.length; b++) {
+      allBtns[b].classList.remove('active');
+    }
+    var btn = container.querySelector('.sidebar-group-btn[data-idx="' + idx + '"]');
+    if (btn) btn.classList.add('active');
+
+    var content = document.getElementById('index-content');
+    var group = allGroups[idx];
+
+    var linksHtml = '';
+    for (var i = 0; i < group.items.length; i++) {
+      var item = group.items[i];
+      var officialUrl = 'https://baomidou.com/' + item.path;
+      linksHtml +=
+        '<a class="doc-link" href="' + officialUrl + '" target="_blank" rel="noopener">' +
+        '<span>' + escapeHtml(item.title) + '</span>' +
+        '<span class="path">' + escapeHtml(item.path) + '</span>' +
+        '</a>';
+    }
+
+    content.innerHTML =
+      '<div class="content-section-title">' +
+      escapeHtml(group.name) +
+      ' <span style="font-weight:400;color:var(--text-muted);font-size:13px">&middot; ' + group.items.length + ' 篇文档</span>' +
+      '</div>' +
+      linksHtml;
+  }
+
+  function renderFullText(text) {
+    var pre = document.getElementById('full-text');
+    var lines = text.split('\n');
+    var html = '';
+
+    for (var i = 0; i < lines.length; i++) {
+      var line = lines[i];
+      var cls = '';
+      var content = line;
+
+      if (/^# /.test(line)) {
+        cls = 'line-h1';
+      } else if (/^## /.test(line)) {
+        cls = 'line-h2';
+      } else if (/^### /.test(line)) {
+        cls = 'line-h3';
+      } else if (/^> /.test(line)) {
+        cls = 'line-bq';
+      } else if (/^\s*- \[/.test(line)) {
+        cls = 'line-link';
+        content = line.replace(
+          /\[([^\]]+)\]\(([^)]+)\)/g,
+          '<a href="$2">$1</a>'
+        );
+      }
+
+      html += '<div class="' + cls + '" data-text="' + escapeAttr(line.toLowerCase()) + '">'
+        + escapeHtml(content) + '</div>';
+    }
+
+    html = html.replace(/<div class="" data-text="">\s*<\/div>/g, '<div class="" data-text="">&nbsp;</div>');
+    pre.innerHTML = html;
+
+    var sizeKB = (new Blob([text]).size / 1024).toFixed(1);
+    var sizeStat = document.getElementById('full-size-stat');
+    if (sizeStat) sizeStat.textContent = '全文 ' + sizeKB + ' KB';
+  }
+
+  function filterFullText(query) {
+    var pre = document.getElementById('full-text');
+    var lines = pre.querySelectorAll('div[data-text]');
+    var q = query.trim().toLowerCase();
+
+    if (!q) {
+      for (var i = 0; i < lines.length; i++) {
+        lines[i].classList.remove('line-hidden');
+      }
+      return;
+    }
+
+    for (var i = 0; i < lines.length; i++) {
+      var text = lines[i].getAttribute('data-text') || '';
+      if (text.indexOf(q) !== -1) {
+        lines[i].classList.remove('line-hidden');
+      } else {
+        lines[i].classList.add('line-hidden');
+      }
+    }
+  }
+
+  var tabBtns = document.querySelectorAll('.tab-btn');
+  for (var t = 0; t < tabBtns.length; t++) {
+    tabBtns[t].addEventListener('click', function() {
+      for (var j = 0; j < tabBtns.length; j++) {
+        tabBtns[j].classList.remove('active');
+      }
+      this.classList.add('active');
+
+      var tab = this.getAttribute('data-tab');
+      document.getElementById('index-view').style.display = (tab === 'index') ? '' : 'none';
+      document.getElementById('full-view').style.display = (tab === 'full') ? '' : 'none';
+
+      if (tab === 'full' && !llmsFullContent) {
+        loadFullText();
+      }
+    });
+  }
+
+  var searchTimer = null;
+  document.getElementById('search-box').addEventListener('input', function(e) {
+    clearTimeout(searchTimer);
+    var query = e.target.value;
+    searchTimer = setTimeout(function() {
+      filterFullText(query);
+    }, 200);
+  });
+
+  function loadLlmsTxt() {
+    fetch('llms.txt')
+      .then(function(r) {
+        if (!r.ok) throw new Error('HTTP ' + r.status);
+        return r.text();
+      })
+      .then(function(text) {
+        llmsTxtContent = text;
+        parsedData = parseLlmsTxt(text);
+        renderIndex(parsedData);
+      })
+      .catch(function(err) {
+        document.getElementById('index-loading').innerHTML =
+          '<div style="color:#999;padding:40px;text-align:center">' +
+          '⚠ 加载 llms.txt 失败: ' + escapeHtml(err.message) + '<br><br>' +
+          '请确保通过 HTTP 服务访问（而非直接打开文件）' +
+          '</div>';
+      });
+  }
+
+  function loadFullText() {
+    fetch('llms-full.txt')
+      .then(function(r) {
+        if (!r.ok) throw new Error('HTTP ' + r.status);
+        return r.text();
+      })
+      .then(function(text) {
+        llmsFullContent = text;
+        renderFullText(text);
+      })
+      .catch(function(err) {
+        document.getElementById('full-text').innerHTML =
+          '<div style="color:#999;padding:40px;text-align:center">' +
+          '⚠ 加载 llms-full.txt 失败: ' + escapeHtml(err.message) +
+          '</div>';
+      });
+  }
+
+  function escapeHtml(str) {
+    return str
+      .replace(/&/g, '&amp;')
+      .replace(/</g, '&lt;')
+      .replace(/>/g, '&gt;')
+      .replace(/"/g, '&quot;');
+  }
+  function escapeAttr(str) {
+    return str
+      .replace(/&/g, '&amp;')
+      .replace(/"/g, '&quot;')
+      .replace(/'/g, '&#39;');
+  }
+
+  loadLlmsTxt();
+})();
+</script>
+
+</body>
+</html>
