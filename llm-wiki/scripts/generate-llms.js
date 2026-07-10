@@ -31,12 +31,12 @@ const SIDEBAR = [
     label: '指南',
     dir: 'guides',
     items: [
-      'wrapper', 'code-generator', 'new-code-generator', 'mybatis-x',
+      'wrapper', 'code-generator', 'new-code-generator',
       'auto-fill-field', 'logic-delete', 'auto-convert-enum',
       'id-generator', 'key-generator', 'auto-ddl',
       'dynamic-datasource', 'security', 'data-interface',
       'batch-operation', 'stream-query', 'type-handler',
-      'sql-injector', 'advanced-features', 'graalvm-native', 'p6spy',
+      'sql-injector', 'p6spy',
     ],
   },
   {
