@@ -1,9 +1,9 @@
 name: CI
 
-on: 
-  push:
-    branches:
-      - master
+# Disabled: upstream CI (Astro build + ECS deploy) not needed in this fork
+# Our deploy-pages.yml handles GitHub Pages deployment via llms.txt crawler
+on:
+  workflow_dispatch:
 
 jobs:
   build:
