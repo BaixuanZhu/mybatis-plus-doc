@@ -56,11 +56,6 @@ const SIDEBAR = [
       'new-code-generator-configuration', 'question', 'about-cve',
     ],
   },
-  {
-    label: '资源',
-    dir: 'resources',
-    items: ['changlog'],
-  },
 ];
 
 // ── 工具函数 ──
