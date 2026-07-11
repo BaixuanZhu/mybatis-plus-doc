@@ -13,17 +13,22 @@ public class User { ... }
 ## 2. 主键 @TableId
 
 ```java
-@TableId(type = IdType.ASSIGN_ID)   // 雪花算法（默认，long 型）
+@TableId(type = IdType.AUTO)   // DB 自增（推荐默认）
 private Long id;
 ```
 `IdType`：
 | 值 | 说明 |
 |---|---|
-| `ASSIGN_ID`（默认） | 雪花算法，类型用 Long |
+| `AUTO`（推荐默认） | 数据库自增，依赖表自增列（MySQL `AUTO_INCREMENT` / PG `BIGSERIAL` / SQL Server `IDENTITY`） |
+| `ASSIGN_ID`（MP 全局默认） | 雪花算法，类型用 Long |
 | `ASSIGN_UUID` | UUID 去横线，类型 String |
-| `AUTO` | 数据库自增，依赖表自增列 |
 | `INPUT` | 自行赋值（不自动生成） |
 | `NONE` | 无策略，随全局 `id-type` |
+
+**为什么默认 `AUTO` 而非 MP 全局默认的 `ASSIGN_ID`（雪花）**：
+- 简单、紧凑、可读、生成可靠（由 DB 兜底），前端无 Long 精度问题；
+- MP 默认 `ASSIGN_ID` 是为分布式 / 分库兜底，单体单库项目用不上它的红利；
+- 未来若扩展为分布式，`BIGINT` 让新老 id 兼容、切换成本低，不必现在提前上雪花。
 
 ## 3. 字段 @TableField
 
@@ -45,6 +50,8 @@ public class User {
     private Integer age;
 }
 ```
+
+> **时间字段推荐组合**：DB 列设 `DEFAULT now()` 兜底 + 实体 `@TableField(fill = FieldFill.INSERT / INSERT_UPDATE)` + `MetaObjectHandler` 统一填充（见 `02-config.md` §4）。业务代码**不得手动 `setCreateTime/setUpdateTime`**——统一交给自动填充，避免遗漏。
 
 ## 4. 字段策略与 null 不更新（重点）
 
@@ -86,7 +93,7 @@ private Integer version;
 private Long deleted;    // 推荐 Long 类型，0=未删除，时间戳=已删除
 ```
 - 不配全局时，用注解单独指定；全局配了则无需注解。
-- 推荐方案：`Long` 字段 + `logic-not-delete-value: 0` + `logic-delete-value: "UNIX_TIMESTAMP(now())"`（详见 `02-config.md` §2）。
+- 推荐方案：`Long` 字段 + `logic-not-delete-value: 0` + `logic-delete-value: "UNIX_TIMESTAMP(now())*1000"`（详见 `02-config.md` §2）。
 - 删除变更新、查询自动过滤，详见 `02-config.md`。
 
 ## 7. 枚举映射（重点）

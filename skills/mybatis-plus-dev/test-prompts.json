@@ -1,0 +1,22 @@
+[
+  {
+    "id": 1,
+    "prompt": "SpringBoot 3 项目集成 MyBatis-Plus，需要分页功能，怎么配置？",
+    "expected": "正确选择 mybatis-plus-spring-boot3-starter；引入 mybatis-plus-jsqlparser 依赖；注册 MybatisPlusInterceptor 且 PaginationInnerInterceptor 最后添加；指定 DbType"
+  },
+  {
+    "id": 2,
+    "prompt": "我的 updateById 没更新 age 字段，而且实体里有个 GenderEnum 枚举字段，前端收到的 JSON 是枚举名而不是数字，怎么修？",
+    "expected": "识别 null 不更新问题，给出 UpdateWrapper.set 解决方案；枚举字段标 @EnumValue + @JsonValue，说明 MybatisEnumTypeHandler 自动转换机制"
+  },
+  {
+    "id": 3,
+    "prompt": "写一个用户关联部门的联表分页查询，XML 方式，用户实体有 JSON 类型字段和枚举字段",
+    "expected": "XML resultMap 含 association/collection；IPage 入参非 null；JSON 字段和枚举字段在 resultMap、条件 #{}、插入 #{} 每个位置都声明 typeHandler；namespace 与 Mapper 接口全限定名一致"
+  },
+  {
+    "id": 4,
+    "prompt": "我的 Service 方法加了 @Transactional，里面调了 saveBatch 和另一个 Service 的方法，但抛异常后数据没回滚，帮我排查",
+    "expected": "识别事务失效场景：rollbackFor 缺失(checked exception 不回滚) / 自调用(同类内部方法不走代理) / 异常被 try-catch 吞掉 / 方法非 public / saveBatch 事务外执行；给出正确写法 @Transactional(rollbackFor=Exception.class) + 不要自调用 + 异常重新抛出或 setRollbackOnly()"
+  }
+]

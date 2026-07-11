@@ -78,3 +78,33 @@
 - ❌ 自定义 XML 查询中，枚举字段只在 resultMap 声明了 typeHandler，查询条件 `#{gender}` 没声明。
 - ✅ 枚举字段在 XML 的**每个位置**（resultMap、条件 `#{}`、插入 `#{}`）都要写 `typeHandler=MybatisEnumTypeHandler`（见 `10-xml.md` §5.4）。
 - 为什么：XML 不继承实体注解，typeHandler 必须逐处显式声明。
+
+## 18. @Transactional 未指定 rollbackFor
+- ❌ `@Transactional` 不写 `rollbackFor`，业务异常继承 `Exception`（非 RuntimeException），抛出后不回滚。
+- ✅ 一律写 `@Transactional(rollbackFor = Exception.class)`（见 `11-transaction.md` §1）。
+- 为什么：Spring 默认只回滚 `RuntimeException` + `Error`，checked exception 默认提交。
+
+## 19. 事务自调用失效
+- ❌ 同类中 `methodA` 直接调用 `this.methodB()`，`methodB` 上的 `@Transactional` 不生效。
+- ✅ 注入自身代理（`@Lazy` 自注入）或拆分到不同 Service（见 `11-transaction.md` §3 场景1）。
+- 为什么：`@Transactional` 基于 Spring AOP 代理，内部调用走 `this`，不经过代理对象，事务被跳过。
+
+## 20. 异常被 catch 吞掉导致不回滚
+- ❌ `@Transactional` 方法内 `try-catch` 吞掉异常，Spring 感知不到异常，事务正常提交。
+- ✅ catch 后 `throw` 重新抛出，或 `TransactionAspectSupport.currentTransactionStatus().setRollbackOnly()` 手动标记（见 `11-transaction.md` §3 场景3）。
+- 为什么：Spring 通过检测方法是否抛出异常来决定回滚；异常被吞，方法正常返回，Spring 认为事务成功。
+
+## 21. @Transactional 加在非 public 方法
+- ❌ `@Transactional` 加在 `private` / 包级可见方法上，静默失效。
+- ✅ 事务方法必须 `public`（见 `11-transaction.md` §3 场景2）。
+- 为什么：Spring AOP 默认只代理 public 方法；非 public 方法上的 `@Transactional` 不报错但不生效。
+
+## 22. saveBatch 在事务外执行
+- ❌ 无 `@Transactional` 直接 `saveBatch(list)`，每条 insert 独立提交，性能差且无原子性。
+- ✅ 加 `@Transactional(rollbackFor = Exception.class)` + JDBC URL `rewriteBatchedStatements=true`（见 `11-transaction.md` §4）。
+- 为什么：事务外 `saveBatch` 每条 SQL 独立提交，无法利用 JDBC 批量合并；事务内同 SqlSession + rewriteBatchedStatements 才是真正批量。
+
+## 23. 多数据源 + 单一 @Transactional 期望跨库一致性
+- ❌ `@DS("master")` + `@Transactional` 中跨 `@DS("slave")` 操作，以为跨库也原子。
+- ✅ 跨库一致性用 Seata / XA 或补偿机制；同一事务内不要切换数据源（见 `11-transaction.md` §6）。
+- 为什么：Spring 事务管理器绑定单个 Connection，`@DS` 切换数据源后新连接不在原事务内，原库回滚不影响新库。

@@ -43,14 +43,25 @@ mybatis-plus:
     db-config:
       logic-delete-field: deleted                    # 全局逻辑删除字段名（实体属性名）
       logic-not-delete-value: 0                      # 未删除 = 0
-      logic-delete-value: "UNIX_TIMESTAMP(now())"    # 已删除 = 当前时间戳（MySQL）
+      logic-delete-value: "UNIX_TIMESTAMP(now())*1000"  # 已删除 = 当前毫秒时间戳（MySQL）
 ```
-- `logic-delete-value` 的值是**直接拼入 SQL 的字符串**，支持写 SQL 函数。删除时生成 SQL 为 `UPDATE table SET deleted = UNIX_TIMESTAMP(now()) WHERE id = ?`。
+- `logic-delete-value` 的值是**直接拼入 SQL 的字符串**，支持写 SQL 函数。删除时生成 SQL 为 `UPDATE table SET deleted = UNIX_TIMESTAMP(now())*1000 WHERE id = ?`。
 - 字段类型 `Long`；查询自动追加 `deleted = 0` 过滤已删除行。
 - 也可在字段上用 `@TableLogic` 单独配置（见 `03-entity.md`）。
 - 启用后：查询自动过滤已删除行；`update` 不会更新已删除行；`delete` 变为 `UPDATE SET deleted = <时间戳>`。
 - **唯一索引**须包含 `deleted` 字段（如 `UNIQUE(username, deleted)`），否则逻辑删除后同值插入报 Duplicate。
-- 非 MySQL 时间戳函数不同：PostgreSQL 用 `EXTRACT(EPOCH FROM now())`，Oracle 用 `(SYSTIMESTAMP - DATE '1970-01-01') * 86400000`。
+- **毫秒时间戳方言表**（`logic-delete-value` 是字符串，原样拼入 SQL）：
+
+| 数据库 | 表达式 |
+|---|---|
+| MySQL | `UNIX_TIMESTAMP(now())*1000` |
+| PostgreSQL | `floor(extract(epoch from now())*1000)` |
+| SQL Server | `DATEDIFF_BIG(millisecond,'1970-01-01',GETUTCDATE())` |
+| Oracle | `(SYSTIMESTAMP - DATE '1970-01-01') * 86400000` |
+| SQLite | `unixepoch()*1000`（旧版 `strftime('%s','now')*1000`） |
+| 达梦 | 兼容 Oracle 表达式 |
+
+> ⚠️ 换数据库必须改该表达式（方言绑定）。
 - 备选方案（不推荐）：`LocalDateTime` + null，`logic-not-delete-value: 'null'`（yaml 单引号转义）、`logic-delete-value: "now()"`，字段类型 `LocalDateTime`。不如 0+时间戳直观。
 
 ## 3. 乐观锁插件
@@ -94,7 +105,7 @@ mybatis-plus:
   global-config:
     banner: false                                           # 关闭启动 banner
     db-config:
-      id-type: ASSIGN_ID                                    # 全局主键策略
+      id-type: auto                                         # 全局主键策略（DB 自增，详见 03-entity.md §2）
       table-prefix: t_                                      # 表前缀
       column-underline: true
 ```

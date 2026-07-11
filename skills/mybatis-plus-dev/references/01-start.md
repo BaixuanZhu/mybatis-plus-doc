@@ -92,9 +92,7 @@ public interface IUserService extends IService<User> {}
 @Service
 public class UserService extends ServiceImpl<UserMapper, User> implements IUserService {
     public List<User> listAdults() {
-        return baseMapper.selectList(
-            new LambdaQueryWrapper<User>().ge(User::getAge, 18)
-        );
+        return this.lambdaQuery().ge(User::getAge, 18).list();
     }
 }
 ```
