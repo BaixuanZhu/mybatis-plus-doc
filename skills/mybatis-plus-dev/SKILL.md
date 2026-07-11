@@ -15,7 +15,7 @@ agent_created: true
 
 # MyBatis-Plus 开发助手
 
-面向日常 Java 开发的 MyBatis-Plus 编码助手。基于 **3.5.17**（最新 3.5.x 线，2026）。
+面向日常 Java 开发的 MyBatis-Plus 编码助手。推荐 **3.5.17**（3.5.x 最新线，2026），**3.5.x 全线适用**，3.4.x 大部分兼容（差异处已注明）。
 采用**完全本地自包含**策略：所有知识沉淀于本地 `references/`，运行时不依赖任何外部文档站点。
 
 ## 版本与依赖（先判 SpringBoot 版本）
@@ -68,7 +68,7 @@ agent_created: true
 ## 使用流程
 
 1. 判断需求属于哪个场景，读取对应 `references/*.md`。
-2. 给代码时严格遵循「核心强约束」，使用 3.5.17 API。
+2. 给代码时严格遵循「核心强约束」，使用 3.5.x API。
 3. 复杂 / 联表查询优先写 XML（见 `10-xml.md`），而非强行 Wrapper。
 4. 涉及易错点（null 更新、分页、注入、字段映射、XML 绑定）时，主动参照 `08-antipattern.md` 给出正确写法并说明原因。
 5. **输出代码前自检（5 项）**：
@@ -79,6 +79,6 @@ agent_created: true
    - [ ] Wrapper 是否每次 `new` 新实例？（不可复用）
 
 ## 版本注意
-- 依赖坐标 `com.baomidou:mybatis-plus-*`，本地 references 基于 3.5.17。
+- 依赖坐标 `com.baomidou:mybatis-plus-*`，本地 references 基于 3.5.17 整理，**3.5.x 全线适用**。
 - `v3.5.9+` 插件拆分为可选依赖（分页需额外引 `mybatis-plus-jsqlparser`）。
 - 若用户环境为 3.4.x 旧版，`PaginationInterceptor` 已被 `MybatisPlusInterceptor` 取代（3.4.0 起），相关章节已注明。
