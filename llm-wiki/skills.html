@@ -161,25 +161,26 @@
   <main class="main">
     <div class="doc-section">
       <h2>这是什么</h2>
-      <p>给 AI 编程助手用的 MyBatis-Plus 开发 Skill。<strong>3.5.x 全线适用</strong>，3.4.x 大部分兼容。完全本地自包含，不依赖外部文档站点，离线可用。10 篇本地参考覆盖从依赖配置到 XML Mapper 编写的全链路，附带输出前自检清单和多场景交叉路由指引。</p>
+      <p>给 AI 编程助手用的 MyBatis-Plus 开发 Skill。<strong>3.5.x 全线适用</strong>，3.4.x 大部分兼容。完全本地自包含，不依赖外部文档站点，离线可用。11 篇本地参考覆盖从依赖配置到事务管理、XML Mapper 编写的全链路，附带 23 条反模式纠偏、输出前 7 项自检清单和多场景交叉路由指引。</p>
     </div>
 
     <div class="doc-section">
       <h2>目录结构</h2>
       <div class="tree">
 <span class="dir">mybatis-plus-dev/</span><br>
-├── <a href="skills/mybatis-plus-dev/SKILL.md">SKILL.md</a> <span class="comment"># 触发词 + 版本声明 + 9 条核心强约束 + 决策路由</span><br>
+├── <a href="skills/mybatis-plus-dev/SKILL.md">SKILL.md</a> <span class="comment"># 触发词 + 版本声明 + 9 条核心强约束 + 决策路由 + 7 项自检</span><br>
 └── <span class="dir">references/</span><br>
 &nbsp;&nbsp;&nbsp;&nbsp;├── <a href="skills/mybatis-plus-dev/references/01-start.md">01-start.md</a> <span class="comment">依赖(starter选择) + jsqlparser必引 + 最小配置 + 基础CRUD</span><br>
-&nbsp;&nbsp;&nbsp;&nbsp;├── <a href="skills/mybatis-plus-dev/references/02-config.md">02-config.md</a> <span class="comment">分页插件 + 逻辑删除(0+时间戳) + 乐观锁 + 自动填充 + 防全表</span><br>
-&nbsp;&nbsp;&nbsp;&nbsp;├── <a href="skills/mybatis-plus-dev/references/03-entity.md">03-entity.md</a> <span class="comment">@TableId/@TableField字段策略/null不更新/枚举映射/@Version/@TableLogic</span><br>
+&nbsp;&nbsp;&nbsp;&nbsp;├── <a href="skills/mybatis-plus-dev/references/02-config.md">02-config.md</a> <span class="comment">分页插件 + 逻辑删除(0+毫秒时间戳/6DB方言) + 乐观锁 + 自动填充 + 防全表</span><br>
+&nbsp;&nbsp;&nbsp;&nbsp;├── <a href="skills/mybatis-plus-dev/references/03-entity.md">03-entity.md</a> <span class="comment">@TableId(AUTO默认)/@TableField字段策略/null不更新/枚举映射/@Version/@TableLogic/时间字段</span><br>
 &nbsp;&nbsp;&nbsp;&nbsp;├── <a href="skills/mybatis-plus-dev/references/04-crud.md">04-crud.md</a> <span class="comment">BaseMapper vs IService + 继承范式 + saveBatch真相</span><br>
 &nbsp;&nbsp;&nbsp;&nbsp;├── <a href="skills/mybatis-plus-dev/references/05-wrapper.md">05-wrapper.md</a> <span class="comment">LambdaQueryWrapper + apply防注入 + 空值语义 + 不可复用</span><br>
 &nbsp;&nbsp;&nbsp;&nbsp;├── <a href="skills/mybatis-plus-dev/references/06-page.md">06-page.md</a> <span class="comment">Page/IPage + 联表分页XML</span><br>
 &nbsp;&nbsp;&nbsp;&nbsp;├── <a href="skills/mybatis-plus-dev/references/07-plugin.md">07-plugin.md</a> <span class="comment">多租户/动态表名/数据权限（全本地）</span><br>
-&nbsp;&nbsp;&nbsp;&nbsp;├── <a href="skills/mybatis-plus-dev/references/08-antipattern.md">08-antipattern.md</a> <span class="comment">★ 17条 Agent常见错误纠偏（核心价值）</span><br>
+&nbsp;&nbsp;&nbsp;&nbsp;├── <a href="skills/mybatis-plus-dev/references/08-antipattern.md">08-antipattern.md</a> <span class="comment">★ 23条 Agent常见错误纠偏（含事务失效6条，核心价值）</span><br>
 &nbsp;&nbsp;&nbsp;&nbsp;├── <a href="skills/mybatis-plus-dev/references/09-troubleshoot.md">09-troubleshoot.md</a> <span class="comment">SQL日志 + 异常定位 + 分页失效排查</span><br>
-&nbsp;&nbsp;&nbsp;&nbsp;└── <a href="skills/mybatis-plus-dev/references/10-xml.md">10-xml.md</a> <span class="comment">XML Mapper编写指南(resultMap/动态SQL/联表/枚举typeHandler)</span>
+&nbsp;&nbsp;&nbsp;&nbsp;├── <a href="skills/mybatis-plus-dev/references/10-xml.md">10-xml.md</a> <span class="comment">XML Mapper编写指南(resultMap/动态SQL/联表/枚举typeHandler)</span><br>
+│&nbsp;&nbsp;&nbsp;&nbsp;└── <a href="skills/mybatis-plus-dev/references/11-transaction.md">11-transaction.md</a> <span class="comment">@Transactional/传播行为/事务失效7大场景/saveBatch与事务/多数据源陷阱</span>
       </div>
     </div>
 
