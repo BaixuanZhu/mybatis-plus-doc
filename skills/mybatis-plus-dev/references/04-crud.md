@@ -1,0 +1,67 @@
+# CRUD 与 Service 层
+
+## 1. BaseMapper vs IService
+
+| 层 | 提供 | 适用 |
+|---|---|---|
+| `BaseMapper<T>` | 单表 CRUD 底层方法（selectById / insert / updateById / delete …） | Mapper 接口直接继承 |
+| `IService<T>` + `ServiceImpl<M,T>` | 在 Mapper 之上封装的批量 / 链式 / 分页便利方法（saveBatch / getOne / list / page …） | Service 层继承 |
+
+**优先用 `IService` 提供的方法**，它们已处理批量与空判断，避免自己写循环。
+
+## 2. 正确继承范式
+
+```java
+public interface UserMapper extends BaseMapper<User> {}
+
+public interface IUserService extends IService<User> {}
+
+@Service
+public class UserService extends ServiceImpl<UserMapper, User> implements IUserService {
+    // 直接用 baseMapper / 父类的 save / page / list 等方法
+}
+```
+
+## 3. saveBatch 真相（重点）
+
+`IService.saveBatch(list)` **默认不是真正的 JDBC 批量**：它按 `batchSize`（默认 1000）分批，每批内仍是**逐条 `insert`**（除非底层 `SqlSession` 处于 BATCH 模式）。
+
+要让它真正批量（减少网络往返）：
+1. xxxxxxxxxx6 1// ❌ 复用导致第二次查询条件翻倍2LambdaQueryWrapper<User> w = ...;3mapper.selectList(w); mapper.selectList(w);4​5// ✅6mapper.selectList(new LambdaQueryWrapper<User>().eq(User::getAge, 18));java
+2. 在 `@Transactional` 内调用，或使用 MP 的批处理 `SqlSession`。
+
+```java
+userService.saveBatch(userList);            // 默认 batchSize=1000
+userService.saveBatch(userList, 500);       // 指定批次大小
+```
+> 若追求极致批量性能，复杂场景用 `InsertBatchSomeColumn` 注入器或原生 `foreach` 批量 SQL，而非依赖 `saveBatch` 的“伪批量”。
+
+## 4. updateById / update 的 null 语义
+
+- `updateById(entity)`：`entity` 中 `null` 字段**不更新**（见 `03-entity.md` 字段策略）。
+- 想把字段置 null：用 `UpdateWrapper.set(...)`。
+- `update(entity, wrapper)`：`entity` 提供 SET 值，`wrapper` 提供 WHERE；`wrapper` 不可复用。
+
+```java
+// 只更新 name，age 不受影响（因 entity.age 为 null）
+userMapper.updateById(new User().setId(1L).setName("New"));
+
+// 显式置 age 为 null
+userMapper.update(null, new LambdaUpdateWrapper<User>()
+    .eq(User::getId, 1L).set(User::getAge, null));
+```
+
+## 5. 常用方法速查
+
+```java
+// IService
+save(entity); saveBatch(list); saveOrUpdate(entity);
+getById(id); getOne(wrapper); list(); list(wrapper); listByIds(ids);
+page(page, wrapper); updateById(entity); update(entity, wrapper);
+removeById(id); remove(wrapper); count(); count(wrapper);
+
+// BaseMapper
+selectById / selectList / selectOne / selectCount / selectMaps / selectObjs
+insert / deleteById / delete / updateById / update
+```
+> `selectObjs` 返回**首列** `Object` 列表（非整行）；取整行用 `selectList`，取 Map 用 `selectMaps`。

@@ -1,0 +1,100 @@
+# 全局配置与插件
+
+> 所有插件以 `MybatisPlusInterceptor` 为容器，通过 `addInnerInterceptor` 添加。分页插件务必最后添加。
+
+## 1. 插件主体与分页插件
+
+```java
+@Configuration
+@MapperScan("com.example.mapper")
+public class MybatisPlusConfig {
+
+    @Bean
+    public MybatisPlusInterceptor mybatisPlusInterceptor() {
+        MybatisPlusInterceptor interceptor = new MybatisPlusInterceptor();
+        // 乐观锁
+        interceptor.addInnerInterceptor(new OptimisticLockerInnerInterceptor());
+        // 防全表更新与删除
+        interceptor.addInnerInterceptor(new BlockAttackInnerInterceptor());
+        // 分页插件：必须最后添加
+        interceptor.addInnerInterceptor(new PaginationInnerInterceptor(DbType.MYSQL));
+        return interceptor;
+    }
+}
+```
+
+> ⚠️ **分页插件必须最后添加**：若多租户 / 动态表名等在其后，COUNT SQL 可能被错误改写导致分页总数不准。
+> 分页依赖 `mybatis-plus-jsqlparser`（v3.5.9+ 已拆分），未引则分页**静默失效、无报错**（见 `01-start.md`）。
+
+`PaginationInnerInterceptor` 常用属性：
+| 属性 | 默认 | 说明 |
+|---|---|---|
+| `overflow` | false | 超出总页数是否回到首页 |
+| `maxLimit` | 无 | 单页最大条数限制（防恶意大分页） |
+| `dbType` | xxxxxxxxxx6 1// ❌ 复用导致第二次查询条件翻倍2LambdaQueryWrapper<User> w = ...;3mapper.selectList(w); mapper.selectList(w);4​5// ✅6mapper.selectList(new LambdaQueryWrapper<User>().eq(User::getAge, 18));java | 数据库类型，单库建议显式指定 |
+
+## 2. 逻辑删除（全局）
+
+> **推荐 0+时间戳方案**（而非 0/1）：字段类型 `Long`，未删除 = `0`，删除时写入当前时间戳。好处：删除时间即逻辑删除标记，可追溯何时删除，无需额外 `delete_time` 字段；且非零值天然区分未删除行。
+
+```yaml
+mybatis-plus:
+  global-config:
+    db-config:
+      logic-delete-field: deleted                    # 全局逻辑删除字段名（实体属性名）
+      logic-not-delete-value: 0                      # 未删除 = 0
+      logic-delete-value: "UNIX_TIMESTAMP(now())"    # 已删除 = 当前时间戳（MySQL）
+```
+- `logic-delete-value` 的值是**直接拼入 SQL 的字符串**，支持写 SQL 函数。删除时生成 SQL 为 `UPDATE table SET deleted = UNIX_TIMESTAMP(now()) WHERE id = ?`。
+- 字段类型 `Long`；查询自动追加 `deleted = 0` 过滤已删除行。
+- 也可在字段上用 `@TableLogic` 单独配置（见 `03-entity.md`）。
+- 启用后：查询自动过滤已删除行；`update` 不会更新已删除行；`delete` 变为 `UPDATE SET deleted = <时间戳>`。
+- **唯一索引**须包含 `deleted` 字段（如 `UNIQUE(username, deleted)`），否则逻辑删除后同值插入报 Duplicate。
+- 非 MySQL 时间戳函数不同：PostgreSQL 用 `EXTRACT(EPOCH FROM now())`，Oracle 用 `(SYSTIMESTAMP - DATE '1970-01-01') * 86400000`。
+- 备选方案（不推荐）：`LocalDateTime` + null，`logic-not-delete-value: 'null'`（yaml 单引号转义）、`logic-delete-value: "now()"`，字段类型 `LocalDateTime`。不如 0+时间戳直观。
+
+## 3. 乐观锁插件
+
+```java
+// 见上方 MybatisPlusInterceptor 中的 OptimisticLockerInnerInterceptor
+```
+实体字段加 `@Version`（见 `03-entity.md`）。更新时自动 `set version = version + 1 where version = ?`，版本不符则影响行数为 0。
+
+## 4. 自动填充
+
+```java
+@Slf4j
+@Component
+public class MyMetaObjectHandler implements MetaObjectHandler {
+    @Override
+    public void insertFill(MetaObject metaObject) {
+        strictInsertFill(metaObject, "createTime", LocalDateTime.class, LocalDateTime.now());
+        strictInsertFill(metaObject, "updateTime", LocalDateTime.class, LocalDateTime.now());
+    }
+    @Override
+    public void updateFill(MetaObject metaObject) {
+        strictUpdateFill(metaObject, "updateTime", LocalDateTime.class, LocalDateTime.now());
+    }
+}
+```
+实体字段：`@TableField(fill = FieldFill.INSERT)` / `FieldFill.UPDATE` / `FieldFill.INSERT_UPDATE`。
+> 自动填充是直接给实体属性设值；若属性本身已有值，strict 模式**默认不覆盖**。
+
+## 5. 防全表更新 / 删除
+
+`BlockAttackInnerInterceptor`：拦截无 WHERE 条件的 `update` / `delete`，防止误清表。生产环境建议开启。
+
+## 6. 其它常用配置
+
+```yaml
+mybatis-plus:
+  configuration:
+    log-impl: org.apache.ibatis.logging.stdout.StdOutImpl   # 打印 SQL（调试用，生产关闭）
+    map-underscore-to-camel-case: true                      # 下划线→驼峰（默认即 true）
+  global-config:
+    banner: false                                           # 关闭启动 banner
+    db-config:
+      id-type: ASSIGN_ID                                    # 全局主键策略
+      table-prefix: t_                                      # 表前缀
+      column-underline: true
+```

@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="icon" href="favicon.ico" type="image/x-icon">
+  <title>MyBatis-Plus 开发 Skills</title>
+  <meta name="description" content="MyBatis-Plus 开发辅助 Skill — 完全本地自包含，AI 可一键下载安装">
+  <style>
+    :root {
+      --accent: #409EFF;
+      --accent-dark: #337ecc;
+      --accent-light: #ecf5ff;
+      --text: #2c3e50;
+      --text-secondary: #666;
+      --text-muted: #999;
+      --bg: #f8f9fa;
+      --card-bg: #fff;
+      --border: #eaecef;
+      --radius: 12px;
+    }
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+
+    /* ── Header ── */
+    .header { text-align: center; padding: 60px 20px 32px; }
+    .header .logo { width: 64px; height: 64px; margin-bottom: 14px; border-radius: 12px; }
+    .header .title-row { display: flex; align-items: baseline; justify-content: center; gap: 10px; }
+    .header h1 { font-size: 32px; font-weight: 700; color: #1a1a1a; letter-spacing: -0.5px; }
+    .header .version { font-size: 14px; color: var(--accent); font-weight: 500; background: var(--accent-light); padding: 2px 10px; border-radius: 20px; }
+    .header .subtitle { margin-top: 8px; font-size: 15px; color: var(--text-secondary); }
+
+    /* ── Main ── */
+    .main { width: 100%; max-width: 680px; padding: 0 20px; }
+
+    /* ── Section Card ── */
+    .doc-section {
+      background: var(--card-bg);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 24px 28px;
+      margin-bottom: 16px;
+    }
+    .doc-section h2 { font-size: 18px; font-weight: 600; margin-bottom: 12px; color: var(--text); }
+    .doc-section p { font-size: 14px; color: var(--text-secondary); line-height: 1.75; }
+    .doc-section p code { color: var(--text-secondary); font-size: 13px; }
+
+    /* ── Tree ── */
+    .tree {
+      font-family: "SFMono-Regular", Consolas, "Liberation Mono", Menlo, monospace;
+      font-size: 13px;
+      background: var(--bg);
+      border-radius: 8px;
+      padding: 16px 18px;
+      line-height: 1.9;
+      color: var(--text);
+      overflow-x: auto;
+    }
+    .tree .dir { color: var(--accent-dark); font-weight: 600; }
+    .tree .comment { color: var(--text-muted); }
+    .tree a { color: var(--accent); text-decoration: none; }
+    .tree a:hover { text-decoration: underline; }
+
+    /* ── Code block ── */
+    .code-wrap { position: relative; margin-top: 14px; }
+    pre.code {
+      margin: 0;
+      background: #1e1e2e;
+      color: #ccc;
+      padding: 18px 20px;
+      border-radius: 6px;
+      overflow-x: auto;
+      font-size: 13px;
+      line-height: 1.7;
+      font-family: "SFMono-Regular", Consolas, "Liberation Mono", Menlo, monospace;
+    }
+    .copy-btn {
+      position: absolute;
+      top: 8px; right: 8px;
+      color: #ccc;
+      border: 1px solid #444;
+      border-radius: 4px;
+      padding: 4px 10px;
+      font-size: 12px;
+      cursor: pointer;
+      background: #2a2a3a;
+    }
+
+    /* ── Download button ── */
+    .btn-download {
+      display: inline-block;
+      margin-top: 14px;
+      padding: 12px 22px;
+      background: var(--accent);
+      color: #fff;
+      border-radius: var(--radius);
+      text-decoration: none;
+      font-size: 14px;
+      font-weight: 500;
+    }
+    .btn-download:hover { background: var(--accent-dark); }
+
+    /* ── Footer / back ── */
+    .back-link { display: block; text-align: center; margin: 8px 0 28px; font-size: 14px; color: var(--accent); text-decoration: none; }
+    .back-link:hover { text-decoration: underline; }
+    .footer { margin-top: auto; padding: 40px 20px; text-align: center; font-size: 13px; color: var(--text-muted); }
+    .footer a { color: var(--text-muted); text-decoration: none; }
+    .footer a:hover { color: var(--accent); }
+  </style>
+</head>
+<body>
+  <header class="header">
+    <img class="logo" src="favicon.ico" alt="MyBatis-Plus">
+    <div class="title-row">
+      <h1>Skills</h1>
+      <span class="version">v3.5.17</span>
+    </div>
+    <p class="subtitle">MyBatis-Plus 开发辅助 Skill — 完全本地自包含</p>
+  </header>
+
+  <main class="main">
+    <div class="doc-section">
+      <h2>这是什么</h2>
+      <p>给 AI 编程助手用的 MyBatis-Plus 开发 Skill。基于 <code>3.5.17</code> 整理，<strong>完全本地自包含</strong>——不依赖任何外部文档站点，离线可用。10 篇本地参考覆盖从依赖配置到 XML Mapper 编写的全链路，核心价值是 <code>08-antipattern.md</code>（17 条 Agent 常见错误纠偏：分页静默失效、null 不更新、saveBatch 伪批量、apply 注入、枚举映射失效等），每条给出"错误写法 → 正确写法 → 为什么"。</p>
+    </div>
+
+    <div class="doc-section">
+      <h2>目录结构</h2>
+      <div class="tree">
+<span class="dir">mybatis-plus-dev/</span><br>
+├── <a href="skills/mybatis-plus-dev/SKILL.md">SKILL.md</a> <span class="comment"># 触发词 + 版本声明 + 9 条核心强约束 + 决策路由</span><br>
+└── <span class="dir">references/</span><br>
+&nbsp;&nbsp;&nbsp;&nbsp;├── <a href="skills/mybatis-plus-dev/references/01-start.md">01-start.md</a> <span class="comment">依赖(starter选择) + jsqlparser必引 + 最小配置 + 基础CRUD</span><br>
+&nbsp;&nbsp;&nbsp;&nbsp;├── <a href="skills/mybatis-plus-dev/references/02-config.md">02-config.md</a> <span class="comment">分页插件 + 逻辑删除(0+时间戳) + 乐观锁 + 自动填充 + 防全表</span><br>
+&nbsp;&nbsp;&nbsp;&nbsp;├── <a href="skills/mybatis-plus-dev/references/03-entity.md">03-entity.md</a> <span class="comment">@TableId/@TableField字段策略/null不更新/枚举映射/@Version/@TableLogic</span><br>
+&nbsp;&nbsp;&nbsp;&nbsp;├── <a href="skills/mybatis-plus-dev/references/04-crud.md">04-crud.md</a> <span class="comment">BaseMapper vs IService + 继承范式 + saveBatch真相</span><br>
+&nbsp;&nbsp;&nbsp;&nbsp;├── <a href="skills/mybatis-plus-dev/references/05-wrapper.md">05-wrapper.md</a> <span class="comment">LambdaQueryWrapper + apply防注入 + 空值语义 + 不可复用</span><br>
+&nbsp;&nbsp;&nbsp;&nbsp;├── <a href="skills/mybatis-plus-dev/references/06-page.md">06-page.md</a> <span class="comment">Page/IPage + 联表分页XML</span><br>
+&nbsp;&nbsp;&nbsp;&nbsp;├── <a href="skills/mybatis-plus-dev/references/07-plugin.md">07-plugin.md</a> <span class="comment">多租户/动态表名/数据权限（全本地）</span><br>
+&nbsp;&nbsp;&nbsp;&nbsp;├── <a href="skills/mybatis-plus-dev/references/08-antipattern.md">08-antipattern.md</a> <span class="comment">★ 17条 Agent常见错误纠偏（核心价值）</span><br>
+&nbsp;&nbsp;&nbsp;&nbsp;├── <a href="skills/mybatis-plus-dev/references/09-troubleshoot.md">09-troubleshoot.md</a> <span class="comment">SQL日志 + 异常定位 + 分页失效排查</span><br>
+&nbsp;&nbsp;&nbsp;&nbsp;└── <a href="skills/mybatis-plus-dev/references/10-xml.md">10-xml.md</a> <span class="comment">XML Mapper编写指南(resultMap/动态SQL/联表/枚举typeHandler)</span>
+      </div>
+    </div>
+
+    <div class="doc-section">
+      <h2>下载</h2>
+      <p>获取 MyBatis-Plus 开发 Skill 安装包：</p>
+      <div class="code-wrap">
+        <button class="copy-btn" onclick="copyInstall()">复制</button>
+        <pre class="code" id="install"><code>curl -L https://baixuanzhu.github.io/mybatis-plus-doc/skills/mybatis-plus-dev.zip -o mybatis-plus-dev.zip</code></pre>
+      </div>
+      <p style="margin-top:14px"><a class="btn-download" href="skills/mybatis-plus-dev.zip">⬇ 下载 mybatis-plus-dev.zip</a></p>
+      <p style="margin-top:12px;font-size:13px;color:var(--text-muted)">解压后将 <code>mybatis-plus-dev/</code> 文件夹放入你所用 AI 编程助手的技能目录（如 <code>~/.workbuddy/skills/</code>）即可使用。</p>
+    </div>
+
+    <a class="back-link" href="index.html">← 返回 LLM Wiki 首页</a>
+  </main>
+
+  <footer class="footer">
+    Powered by <a href="https://llmstxt.org/" target="_blank">llms.txt 协议</a>
+    · 由 <a href="https://github.com/BaixuanZhu" target="_blank">BaixuanZhu</a> 维护
+    · 文档来自 <a href="https://github.com/baomidou/mybatis-plus-doc" target="_blank">mybatis-plus-doc</a>
+  </footer>
+
+  <script>
+    function copyInstall() {
+      const el = document.getElementById('install').innerText;
+      navigator.clipboard.writeText(el).then(function () {
+        const btn = document.querySelector('.copy-btn');
+        btn.textContent = '已复制';
+        setTimeout(function () { btn.textContent = '复制'; }, 1500);
+      });
+    }
+  </script>
+</body>
+</html>
