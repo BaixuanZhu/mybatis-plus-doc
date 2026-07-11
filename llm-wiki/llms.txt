@@ -13,7 +13,6 @@
 - [条件构造器](docs/guides/wrapper.md)
 - [代码生成器](docs/guides/code-generator.md)
 - [代码生成器](docs/guides/new-code-generator.md)
-- [Mybatis X 插件](docs/guides/mybatis-x.md)
 - [自动填充字段](docs/guides/auto-fill-field.md)
 - [逻辑删除支持](docs/guides/logic-delete.md)
 - [自动映射枚举](docs/guides/auto-convert-enum.md)
@@ -27,8 +26,6 @@
 - [流式查询](docs/guides/stream-query.md)
 - [字段类型处理器](docs/guides/type-handler.md)
 - [SQL注入器](docs/guides/sql-injector.md)
-- [高级特性](docs/guides/advanced-features.md)
-- [GraalVM Native](docs/guides/graalvm-native.md)
 - [SQL分析与打印](docs/guides/p6spy.md)
 
 ## 插件
@@ -50,7 +47,13 @@
 - [常见问题](docs/reference/question.md)
 - [预防安全漏洞](docs/reference/about-cve.md)
 
-## 资源
+## MyBatis 原生
 
-- [更新日志](docs/resources/changlog.md)
+- [Mapper XML 概述](docs/mybatis-native/mapper-overview.md)
+- [增删改查映射语句](docs/mybatis-native/crud-mapping.md)
+- [结果映射 resultMap](docs/mybatis-native/result-map.md)
+- [动态 SQL](docs/mybatis-native/dynamic-sql.md)
+- [SQL 片段复用](docs/mybatis-native/sql-include.md)
+- [参数映射](docs/mybatis-native/parameters.md)
+- [缓存机制](docs/mybatis-native/cache.md)
 

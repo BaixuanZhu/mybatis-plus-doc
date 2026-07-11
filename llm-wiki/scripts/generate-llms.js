@@ -1,13 +1,12 @@
 #!/usr/bin/env node
 /**
- * MyBatis-Plus llms.txt 生成器（爬虫版）
+ * MyBatis-Plus llms.txt 生成器（爬虫版 + 本地文档）
  * 
- * 从 baomidou.com 爬取已渲染的 HTML 页面，用 cheerio 解析，
- * 转为干净 Markdown，生成 llms.txt / llms-full.txt / docs/
+ * 数据来源：
+ * 1. baomidou.com — 爬取已渲染的 HTML 页面（MyBatis-Plus 文档），cheerio 解析转为 Markdown
+ * 2. 本地 Markdown — llm-wiki/mybatis-native/ 目录（MyBatis 原生 XML Mapper 语法）
  * 
- * 与 Sa-Token 方案的区别：
- * - Sa-Token: 解析本地 .md 源文件
- * - MyBatis-Plus: 爬取官网已渲染 HTML（Astro SSR，内容完整）
+ * 生成物：llms.txt（索引）/ llms-full.txt（聚合）/ docs/（清洗版单篇）
  */
 
 const cheerio = require('cheerio');
@@ -15,9 +14,11 @@ const fs = require('fs');
 const path = require('path');
 
 const BASE_URL = 'https://baomidou.com';
+const MYBATIS_DOCS_URL = 'https://mybatis.org/mybatis-3/zh_CN/sqlmap-xml.html';
 const OUTPUT_DIR = path.join(__dirname, '..');           // llm-wiki/
 const REPO_ROOT = path.join(__dirname, '..', '..');       // 仓库根
 const DOCS_DIR = path.join(REPO_ROOT, 'docs');            // 仓库根/docs/
+const LOCAL_NATIVE_DIR = path.join(OUTPUT_DIR, 'mybatis-native'); // llm-wiki/mybatis-native/
 
 // ── 侧边栏配置（分组 + 页面 slug）──
 // 标题从页面 <h1> 自动提取
@@ -55,6 +56,15 @@ const SIDEBAR = [
       'annotation', 'code-generator-configuration',
       'new-code-generator-configuration', 'question', 'about-cve',
     ],
+  },
+  {
+    label: 'MyBatis 原生',
+    dir: 'mybatis-native',
+    items: [
+      'mapper-overview', 'crud-mapping', 'result-map',
+      'dynamic-sql', 'sql-include', 'parameters', 'cache',
+    ],
+    source: 'local',
   },
 ];
 
@@ -480,6 +490,30 @@ function generateFull(allPages) {
   return full;
 }
 
+// ── 本地 Markdown 读取（MyBatis 原生文档）──
+
+function processLocalMarkdown(slug) {
+  const localPath = path.join(LOCAL_NATIVE_DIR, `${slug}.md`);
+  if (!fs.existsSync(localPath)) {
+    throw new Error(`本地文件不存在: ${localPath}`);
+  }
+
+  const content = fs.readFileSync(localPath, 'utf-8');
+
+  // 提取标题（第一个 # 行）
+  const titleMatch = content.match(/^# (.+)$/m);
+  const title = titleMatch ? titleMatch[1].trim() : slug;
+
+  // 提取正文（去掉标题行和来源行后的内容）
+  let body = content;
+  // 移除第一行标题
+  body = body.replace(/^# .+\n/, '');
+  // 移除来源行
+  body = body.replace(/^> 来源:.+\n/, '');
+
+  return { title, body: body.trim() + '\n' };
+}
+
 // ── 主函数 ──
 
 async function main() {
@@ -503,48 +537,65 @@ async function main() {
     console.log(`\n── ${group.label} ──`);
 
     for (const slug of group.items) {
-      const url = `${BASE_URL}/${group.dir}/${slug}/`;
       const outDir = path.join(DOCS_DIR, group.dir);
       const outPath = path.join(outDir, `${slug}.md`);
 
       process.stdout.write(`  [${success + failed + 1}/${total}] ${group.dir}/${slug} ... `);
 
       try {
-        const html = await fetchPage(url);
-        const result = convertHtml(html);
+        let title, body, sourceUrl;
 
-        if (!result) {
-          console.log('❌ 转换失败');
-          failed++;
-          continue;
+        if (group.source === 'local') {
+          // 本地 Markdown 文件（MyBatis 原生文档）
+          const result = processLocalMarkdown(slug);
+          title = result.title;
+          body = result.body;
+          sourceUrl = MYBATIS_DOCS_URL;
+        } else {
+          // 爬取官网 HTML
+          const url = `${BASE_URL}/${group.dir}/${slug}/`;
+          const html = await fetchPage(url);
+          const result = convertHtml(html);
+
+          if (!result) {
+            console.log('❌ 转换失败');
+            failed++;
+            continue;
+          }
+
+          title = result.title;
+          body = result.body;
+          sourceUrl = url;
         }
 
         // 写入单篇
         fs.mkdirSync(outDir, { recursive: true });
 
         let mdContent = '';
-        mdContent += `# ${result.title}\n\n`;
-        mdContent += `> 来源: ${url}\n\n`;
-        mdContent += result.body;
+        mdContent += `# ${title}\n\n`;
+        mdContent += `> 来源: ${sourceUrl}\n\n`;
+        mdContent += body;
 
         fs.writeFileSync(outPath, mdContent, 'utf-8');
 
         allPages.push({
           group: group.dir,
           slug,
-          title: result.title,
-          body: result.body,
+          title,
+          body,
         });
 
-        console.log(`✅ ${result.title}`);
+        console.log(`✅ ${title}`);
         success++;
       } catch (err) {
         console.log(`❌ ${err.message}`);
         failed++;
       }
 
-      // 礼貌延迟
-      await sleep(500);
+      // 礼貌延迟（仅爬虫模式需要）
+      if (group.source !== 'local') {
+        await sleep(500);
+      }
     }
   }
 

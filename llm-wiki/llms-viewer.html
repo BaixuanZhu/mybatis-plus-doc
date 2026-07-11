@@ -3,6 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="icon" href="favicon.ico" type="image/x-icon">
   <title>MyBatis-Plus llms.txt 查看器</title>
   <style>
     :root {
@@ -408,7 +409,12 @@
     var linksHtml = '';
     for (var i = 0; i < group.items.length; i++) {
       var item = group.items[i];
-      var officialUrl = 'https://baomidou.com/' + item.path;
+      var officialUrl;
+      if (item.path.indexOf('mybatis-native/') === 0) {
+        officialUrl = 'https://mybatis.org/mybatis-3/zh_CN/sqlmap-xml.html';
+      } else {
+        officialUrl = 'https://baomidou.com/' + item.path;
+      }
       linksHtml +=
         '<a class="doc-link" href="' + officialUrl + '" target="_blank" rel="noopener">' +
         '<span>' + escapeHtml(item.title) + '</span>' +
