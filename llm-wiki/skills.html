@@ -189,37 +189,12 @@
       <h2>安装</h2>
 
       <div class="install-block">
-        <h3 style="font-size:15px;font-weight:600;margin-bottom:4px">SkillHub CLI 安装<span class="badge-rec">推荐</span></h3>
-        <p>通过 <a href="https://skillhub.cn" target="_blank" style="color:var(--accent);text-decoration:none">SkillHub</a> CLI 一键安装，自动适配你的 AI 编程助手：</p>
-        <ol class="install-steps">
-          <li>检查是否已安装 SkillHub CLI：
-            <div class="code-wrap">
-              <button class="copy-btn" onclick="copyCode(this)">复制</button>
-              <pre class="code"><code>command -v skillhub && skillhub --version</code></pre>
-            </div>
-          </li>
-          <li>未安装则执行（仅需一次）：
-            <div class="code-wrap">
-              <button class="copy-btn" onclick="copyCode(this)">复制</button>
-              <pre class="code"><code>curl -fsSL https://skillhub-1388575217.cos.ap-guangzhou.myqcloud.com/install/install.sh | bash</code></pre>
-            </div>
-          </li>
-          <li>安装 mybatis-plus-dev 技能（<code>--dir</code> 指向你的 AI 助手 skills 目录）：
-            <div class="code-wrap">
-              <button class="copy-btn" onclick="copyCode(this)">复制</button>
-              <pre class="code"><code>skillhub install mybatis-plus-dev --dir ~/.workbuddy/skills/</code></pre>
-            </div>
-          </li>
-        </ol>
-        <p style="margin-top:8px;font-size:13px;color:var(--text-muted)">各 AI 助手的 skills 目录：</p>
-        <table class="path-table">
-          <tr><td>WorkBuddy</td><td><code>~/.workbuddy/skills/</code></td></tr>
-          <tr><td>Claude Code</td><td><code>~/.claude/skills/</code></td></tr>
-          <tr><td>Cursor</td><td><code>~/.cursor/skills/</code></td></tr>
-          <tr><td>Windsurf</td><td><code>~/.codeium/windsurf/skills/</code></td></tr>
-          <tr><td>Codex</td><td><code>~/.codex/skills/</code></td></tr>
-          <tr><td>Gemini CLI</td><td><code>~/.gemini/skills/</code></td></tr>
-        </table>
+        <h3 style="font-size:15px;font-weight:600;margin-bottom:4px">SkillHub 安装<span class="badge-rec">推荐</span></h3>
+        <p>复制以下提示词，粘贴给你的 AI 编程助手即可自动安装：</p>
+        <div class="code-wrap">
+          <button class="copy-btn" onclick="copyCode(this)">复制</button>
+          <pre class="code"><code>请根据 https://skillhub.cn/install/skillhub.md，安装 mybatis-plus-dev。</code></pre>
+        </div>
       </div>
 
       <div class="install-block" style="margin-top:20px;border-top:1px solid var(--border);padding-top:18px">
