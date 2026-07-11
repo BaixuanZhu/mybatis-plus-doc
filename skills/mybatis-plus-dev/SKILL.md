@@ -56,12 +56,27 @@ agent_created: true
 | SQL 日志开启、常见异常与分页失效排查 | `references/09-troubleshoot.md` |
 | **MyBatis XML Mapper 编写（mapper-locations / resultMap / 动态 SQL / 联表 / 联表分页）** | `references/10-xml.md` |
 
+> **多场景交叉优先级**：当需求同时命中多个 references 时，按下表确定阅读顺序：
+>
+> | 组合场景 | 先读 | 再读 | 原因 |
+> |---------|------|------|------|
+> | 分页 + 联表 XML | `06-page.md` | `10-xml.md` | 先确认 IPage 分页机制，再写联表 SQL |
+> | 枚举 + XML 自定义查询 | `03-entity.md` | `10-xml.md` | 先确认枚举映射策略，再在 XML 声明 typeHandler |
+> | 逻辑删除 + 多租户 | `07-plugin.md` | `02-config.md` | 先确认插件顺序，再配全局逻辑删除 |
+> | 批量插入 + 事务 | `04-crud.md` | `08-antipattern.md` | 先确认 saveBatch 语义，再查 antipattern 纠偏 |
+
 ## 使用流程
 
 1. 判断需求属于哪个场景，读取对应 `references/*.md`。
 2. 给代码时严格遵循「核心强约束」，使用 3.5.17 API。
 3. 复杂 / 联表查询优先写 XML（见 `10-xml.md`），而非强行 Wrapper。
 4. 涉及易错点（null 更新、分页、注入、字段映射、XML 绑定）时，主动参照 `08-antipattern.md` 给出正确写法并说明原因。
+5. **输出代码前自检（5 项）**：
+   - [ ] SpringBoot 版本对应的 starter 坐标正确？（2.x / 3.x / 4.x）
+   - [ ] 分页场景是否引入了 `mybatis-plus-jsqlparser` 依赖？
+   - [ ] `updateById` 场景是否需要置 null？需要则改用 `UpdateWrapper.set()`
+   - [ ] 枚举字段在 XML 中每个 `#{}` 位置都声明了 `typeHandler=MybatisEnumTypeHandler`？
+   - [ ] Wrapper 是否每次 `new` 新实例？（不可复用）
 
 ## 版本注意
 - 依赖坐标 `com.baomidou:mybatis-plus-*`，本地 references 基于 3.5.17。

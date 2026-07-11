@@ -27,7 +27,7 @@ public class UserService extends ServiceImpl<UserMapper, User> implements IUserS
 `IService.saveBatch(list)` **默认不是真正的 JDBC 批量**：它按 `batchSize`（默认 1000）分批，每批内仍是**逐条 `insert`**（除非底层 `SqlSession` 处于 BATCH 模式）。
 
 要让它真正批量（减少网络往返）：
-1. xxxxxxxxxx6 1// ❌ 复用导致第二次查询条件翻倍2LambdaQueryWrapper<User> w = ...;3mapper.selectList(w); mapper.selectList(w);4​5// ✅6mapper.selectList(new LambdaQueryWrapper<User>().eq(User::getAge, 18));java
+1. 配置 JDBC URL 参数 `rewriteBatchedStatements=true`（MySQL），让驱动真正合并批量语句。
 2. 在 `@Transactional` 内调用，或使用 MP 的批处理 `SqlSession`。
 
 ```java

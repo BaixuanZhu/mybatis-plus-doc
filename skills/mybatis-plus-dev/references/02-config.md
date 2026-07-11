@@ -31,7 +31,7 @@ public class MybatisPlusConfig {
 |---|---|---|
 | `overflow` | false | 超出总页数是否回到首页 |
 | `maxLimit` | 无 | 单页最大条数限制（防恶意大分页） |
-| `dbType` | xxxxxxxxxx6 1// ❌ 复用导致第二次查询条件翻倍2LambdaQueryWrapper<User> w = ...;3mapper.selectList(w); mapper.selectList(w);4​5// ✅6mapper.selectList(new LambdaQueryWrapper<User>().eq(User::getAge, 18));java | 数据库类型，单库建议显式指定 |
+| `dbType` | 无 | 数据库类型，单库建议显式指定 |
 
 ## 2. 逻辑删除（全局）
 
