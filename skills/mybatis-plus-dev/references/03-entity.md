@@ -69,7 +69,7 @@ userMapper.update(null, new LambdaUpdateWrapper<User>()
     .set(User::getAge, null));
 ```
 
-## xxxxxxxxxx10 1mybatis-plus:2  configuration:3    log-impl: org.apache.ibatis.logging.stdout.StdOutImpl   # 打印 SQL（调试用，生产关闭）4    map-underscore-to-camel-case: true                      # 下划线→驼峰（默认即 true）5  global-config:6    banner: false                                           # 关闭启动 banner7    db-config:8      id-type: ASSIGN_ID                                    # 全局主键策略9      table-prefix: t_                                      # 表前缀10      column-underline: trueyaml
+## 5. 乐观锁 @Version
 
 ```java
 @Version

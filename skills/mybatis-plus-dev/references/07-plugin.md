@@ -22,7 +22,7 @@ interceptor.addInnerInterceptor(new TenantLineInnerInterceptor(
 - 个别 Mapper 方法用 `@InterceptorIgnore(tenantLine = "true")` 跳过。
 - 注意与逻辑删除字段共存时的 SQL 改写顺序。
 
-## xxxxxxxxxx3 1if (SqlInjectionUtils.check(sortField)) {2    throw new IllegalArgumentException("非法排序字段");3}java
+## 3. 动态表名 DynamicTableNameInnerInterceptor
 
 ```java
 interceptor.addInnerInterceptor(new DynamicTableNameInnerInterceptor(
