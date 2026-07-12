@@ -18,5 +18,20 @@
     "id": 4,
     "prompt": "我的 Service 方法加了 @Transactional，里面调了 saveBatch 和另一个 Service 的方法，但抛异常后数据没回滚，帮我排查",
     "expected": "识别事务失效场景：rollbackFor 缺失(checked exception 不回滚) / 自调用(同类内部方法不走代理) / 异常被 try-catch 吞掉 / 方法非 public / saveBatch 事务外执行；给出正确写法 @Transactional(rollbackFor=Exception.class) + 不要自调用 + 异常重新抛出或 setRollbackOnly()"
+  },
+  {
+    "id": 5,
+    "prompt": "我们项目用的 Spring Data JPA，想写一个多表关联查询，Repository 怎么写？",
+    "expected": "识别为 JPA 场景，不适用本技能。不应给出 MyBatis-Plus 的 BaseMapper/IService/Wrapper 方案，应明确告知用户本技能不覆盖 JPA/Hibernate"
+  },
+  {
+    "id": 6,
+    "prompt": "帮我设计一个订单表的表结构，要包含商品、金额、状态等字段，用什么数据库类型？需要加哪些索引？",
+    "expected": "识别为数据库表结构设计/DDL 场景，不适用本技能。不应给出 @TableField/@TableId 等 MP 实体映射方案，应明确告知本技能不覆盖表结构设计"
+  },
+  {
+    "id": 7,
+    "prompt": "项目没引 MyBatis-Plus，用的原生 MyBatis，XML 里写了个联表查询但分页不对，帮忙看看",
+    "expected": "识别为纯 MyBatis 原生项目，部分适用。仅 references/10-xml.md（XML Mapper 编写）和 references/11-transaction.md 可参考；不应给出 BaseMapper/IService/Wrapper 等 MP 特有 API"
   }
 ]

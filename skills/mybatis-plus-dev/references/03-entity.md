@@ -55,19 +55,20 @@ public class User {
 
 ## 4. 字段策略与 null 不更新（重点）
 
-`FieldStrategy` 决定字段何时进入 SQL：
+`FieldStrategy` 决定字段何时进入 SQL（完整说明见 `02-config.md` §7）：
 
 | 策略 | 行为 |
 |---|---|
 | `DEFAULT` / `NOT_NULL` | 值为 `null` 时不参与更新 / 插入（**默认**） |
-| `IGNORED` | 无论 null 与否都参与（可把字段更新为 null） |
+| `ALWAYS` | 无论 null 与否都参与（可把字段更新为 null） |
 | `NOT_EMPTY` | 字符串空串也不参与 |
 | `NEVER` | 永远不参与（只读字段） |
+| `IGNORED` | **@Deprecated**，等价于 `ALWAYS`，旧代码应迁移 |
 
-**默认情况下 `updateById(entity)` 中 `null` 字段不会写入 SQL**，这正是"为什么 update 后某些字段没变"的根因。
+**默认情况下 `updateById(entity)` 中 `null` 字段不会写入 SQL**，这正是"为什么 update 后某些字段没变"的根因（全局 `updateStrategy` 默认 `NOT_NULL`）。
 
 - 想把某字段显式置为 `null`：用 `UpdateWrapper.set("age", null)`。
-- 想某字段随时可 null：字段标 `@TableField(updateStrategy = FieldStrategy.IGNORED)`（慎用，会覆盖所有 null 更新语义）。
+- 想某字段随时可 null：字段标 `@TableField(updateStrategy = FieldStrategy.ALWAYS)`（慎用，会绕过 null 不更新保护）。
 
 ```java
 // 把 age 更新为 null
