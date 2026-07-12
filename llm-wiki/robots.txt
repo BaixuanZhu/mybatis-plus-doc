@@ -1,0 +1,3 @@
+User-agent: *
+Allow: /
+Sitemap: https://baixuanzhu.github.io/mybatis-plus-doc/sitemap.xml

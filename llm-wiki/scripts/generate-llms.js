@@ -453,6 +453,7 @@ function generateIndex(allPages) {
   let llmsTxt = '';
   llmsTxt += `# MyBatis-Plus\n\n`;
   llmsTxt += `> MyBatis-Plus 是一个 MyBatis 的增强工具，在 MyBatis 的基础上只做增强不做改变，为简化开发、提高效率而生。\n\n`;
+  llmsTxt += `> 关键词：CRUD · 条件构造器 · LambdaQueryWrapper · 分页插件 · 逻辑删除 · 自动填充 · 乐观锁 · 多租户 · 代码生成 · BaseMapper · IService · 动态表名 · 事务管理\n\n`;
 
   for (const group of SIDEBAR) {
     const pages = allPages.filter(p => p.group === group.dir);
@@ -472,6 +473,7 @@ function generateFull(allPages) {
   let full = '';
   full += `# MyBatis-Plus 全量文档\n\n`;
   full += `> MyBatis-Plus 是一个 MyBatis 的增强工具，在 MyBatis 的基础上只做增强不做改变，为简化开发、提高效率而生。\n\n`;
+  full += `> 关键词：CRUD · 条件构造器 · LambdaQueryWrapper · 分页插件 · 逻辑删除 · 自动填充 · 乐观锁 · 多租户 · 代码生成 · BaseMapper · IService · 动态表名 · 事务管理\n\n`;
 
   for (const group of SIDEBAR) {
     const pages = allPages.filter(p => p.group === group.dir);

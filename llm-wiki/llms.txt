@@ -2,6 +2,8 @@
 
 > MyBatis-Plus 是一个 MyBatis 的增强工具，在 MyBatis 的基础上只做增强不做改变，为简化开发、提高效率而生。
 
+> 关键词：CRUD · 条件构造器 · LambdaQueryWrapper · 分页插件 · 逻辑删除 · 自动填充 · 乐观锁 · 多租户 · 代码生成 · BaseMapper · IService · 动态表名 · 事务管理
+
 ## 从这里开始
 
 - [安装](docs/getting-started/install.md)
