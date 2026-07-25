@@ -2,8 +2,7 @@
 name: mybatis-plus-dev
 description: >-
   MyBatis-Plus（baomidou）Java ORM 增强框架开发助手。
-  适用于：项目已使用 MyBatis-Plus 依赖（mybatis-plus-boot-starter /
-  mybatis-plus-spring-boot3-starter）、BaseMapper/IService 继承体系、
+  适用于：项目已使用 MyBatis-Plus 依赖（mybatis-plus-boot-starter 及 mybatis-plus-spring-boot*-starter 系列，覆盖 SpringBoot 2/3/4）、BaseMapper/IService 继承体系、
   QueryWrapper/LambdaQueryWrapper 条件构造、分页插件（PaginationInnerInterceptor）、
   逻辑删除（@TableLogic）、自动填充（MetaObjectHandler）、乐观锁（@Version）、
   枚举映射（@EnumValue/IEnum）、@TableId/@TableField 字段映射、saveBatch 批量、
