@@ -36,6 +36,26 @@ userService.saveBatch(userList, 500);       // 指定批次大小
 ```
 > 若追求极致批量性能，复杂场景用 `InsertBatchSomeColumn` 注入器或原生 `foreach` 批量 SQL，而非依赖 `saveBatch` 的“伪批量”。
 
+### MP 侧批量 / 性能要点（仅 MP 专属，非通用 DBA）
+
+以下均为 MyBatis-Plus / MyBatis 层可掌控的性能点；**连接池调优、索引设计、慢查询分析属数据源 / DBA 层，不在本 skill 范围**（见 SKILL.md「不适用」边界）。
+
+- **真正批量三法**（减少网络往返）：
+  1. `BATCH` executor：`new SqlSessionTemplate(sqlSessionFactory, ExecutorType.BATCH)` + JDBC URL `rewriteBatchedStatements=true`（MySQL），循环 `insert` 后 `sqlSession.flushStatements()`。
+  2. `InsertBatchSomeColumn` 注入器（MP 自带，生成多值 `INSERT`），主要适配 MySQL 多值语法；其他库见 `12-dbtype.md` 走 BATCH。
+  3. 原生 XML `foreach` 多值 `INSERT`（简单可控，跨库兼容性最好）。
+- **一级缓存范围**：`local-cache-scope=STATEMENT`（微服 / 分布式场景防跨请求脏读，见 `02-config.md §8`）；默认 `SESSION` 在长会话或集群中可能读到旧值。
+- **大结果集流式**：避免 `selectList` 全量进内存（OOM 风险），用游标 / `ResultHandler`：
+  ```java
+  @Options(resultSetType = ResultSetType.FORWARD_ONLY, fetchSize = 1000)
+  void scanBigTable(ResultHandler<User> handler);  // 逐批回调，不囤全量
+  ```
+- **分页防护**：`PaginationInnerInterceptor.maxLimit` 设单页上限，防恶意超大分页拖垮 DB（见 `02-config.md §1`）。
+- 反模式：
+  - ❌ `saveBatch` 当真批量 → 网络往返未减（见 `08-antipattern.md` #4/#22）。
+  - ❌ `BATCH` executor 不在同一 `SqlSession` / 事务内 → 语句未合并，退化为逐条。
+  - ❌ 大表 `selectList` 全量 → 内存溢出；改流式 / 分页游标。
+
 ## 4. updateById / update 的 null 语义
 
 - `updateById(entity)`：`entity` 中 `null` 字段**不更新**（见 `03-entity.md` 字段策略）。

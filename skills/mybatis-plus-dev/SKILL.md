@@ -8,10 +8,10 @@ description: >-
   枚举映射（@EnumValue/IEnum）、@TableId/@TableField 字段映射、saveBatch 批量、
   MyBatis XML Mapper 编写、事务管理（@Transactional/事务失效排查），
   以及 null 不更新、分页失效、SQL 注入、字段映射错误等问题排查。
-  不适用于：JPA/Hibernate、数据库表结构设计/DDL、纯 SQL 性能调优。
+  不适用于：JPA/Hibernate、数据库表结构设计/DDL、纯 SQL 性能调优（连接池调优、索引策略、慢查询分析属数据源/DBA 层，不在本 skill）。MP 专属性能（批量 BATCH / InsertBatchSomeColumn / 一级缓存 / 流式大结果集）见 `references/04-crud.md §3`。
   纯 MyBatis 原生项目仅 XML Mapper 和事务章节部分适用。
 agent_created: true
-version: 2.0.1
+version: 2.1.0
 slug: mybatis-plus-dev
 displayName: MyBatis-Plus 开发助手
 ---
@@ -57,10 +57,11 @@ displayName: MyBatis-Plus 开发助手
 3. **复杂 / 联表 SQL 进 XML 或 `@Select`**：不要用 Wrapper 硬堆多表 join；MP 擅长单表，复杂查询交给 XML。
 4. **null 不更新**：`updateById(entity)` 中 entity 的 `null` 字段默认**不参与更新**（根因：全局 `updateStrategy` 默认 `NOT_NULL`，见 `references/02-config.md` §7）；要显式置空用 `UpdateWrapper.set(...)` 或字段级 `@TableField(updateStrategy = FieldStrategy.ALWAYS)`。
 5. **逻辑删除**：推荐 0+时间戳方案（`Long` 字段，`logic-not-delete-value: 0`，`logic-delete-value: "UNIX_TIMESTAMP(now())"`）；用全局 `logic-delete-field` 或字段 `@TableLogic`；启用后查询自动过滤已删除行。
-6. **分页插件最后添加**：`MybatisPlusInterceptor.addInnerInterceptor(new PaginationInnerInterceptor(DbType.MYSQL))` 必须放在插件链**最后**；多数据源务必指定 `DbType`。
+6. **分页插件最后添加 + 显式 DbType**：`MybatisPlusInterceptor.addInnerInterceptor(new PaginationInnerInterceptor(DbType.MYSQL))` 必须放在插件链**最后**；**非 MySQL（PG/Oracle/SQLServer/达梦/金仓）必须显式指定 `DbType`**，否则分页方言可能生成错误（total 错或语法错）。跨库差异（主键策略/引用符/批量语法）见 `references/12-dbtype.md`。
 7. **SQL 注入防护**：`Wrapper.apply` 用 `{0}` 占位符（PreparedStatement 参数化）+ 前置 `SqlInjectionUtils.check(...)` 校验，**禁止字符串拼接** SQL 片段。`check` 返回 boolean 并抛异常，不返回安全值。
 8. **Wrapper 不可复用**：同一 `Wrapper` 实例多次使用会叠加条件；每次查询 `new` 一个新的。
 9. **枚举映射**：枚举值字段标 `@EnumValue`（或实现 `IEnum`），JSON 序列化标 `@JsonValue`；XML 自定义查询中枚举字段的**每个位置**（resultMap、条件 `#{}`、插入 `#{}`）都要声明 `typeHandler=MybatisEnumTypeHandler`。
+10. **高级插件顺序（多租户/数据权限/动态表名 → 分页最后）**：`TenantLineInnerInterceptor` / `DataPermissionInterceptor` / `DynamicTableNameInnerInterceptor` 必须在 `PaginationInnerInterceptor` **之前**添加；否则 COUNT 语句不会被改写，分页总数不准或数据权限漏过滤（见 `references/07-plugin.md` §5）。
 
 ## 决策路由（全部本地，无在线 fetch）
 
@@ -73,6 +74,8 @@ displayName: MyBatis-Plus 开发助手
 | QueryWrapper vs LambdaQueryWrapper、条件构造、apply 防注入、空值语义 | `references/05-wrapper.md` | Wrapper 不可复用；`apply` 用 `{0}` 占位 + `SqlInjectionUtils.check` |
 | 分页：Page/IPage、自定义 count、联表分页 XML | `references/06-page.md` | IPage 非 null 非 List；ORDER BY 写 XML |
 | 插件：逻辑删除/自动填充/乐观锁/多租户/动态表名/数据权限/防全表 | `references/07-plugin.md` | 插件顺序：分页最后 |
+| **数据库适配：DbType/分页方言/主键策略/标识符引用符/逻辑删除函数/批量语法** | `references/12-dbtype.md` | 非 MySQL 必须显式 `DbType`；Oracle/PG 勿用 `AUTO` 主键 |
+| **3.4.x→3.5.x 迁移 / 兼容（breaking changes）** | `references/13-migration.md` | `PaginationInterceptor`→`MybatisPlusInterceptor`；`IGNORED`→`ALWAYS`；3.5.9+ 引 jsqlparser |
 | **Agent 常见错误与最佳实践（重点看）** | `references/08-antipattern.md` | — |
 | SQL 日志开启、常见异常与分页失效排查 | `references/09-troubleshoot.md` | — |
 | **MyBatis XML Mapper 编写（mapper-locations / resultMap / 动态 SQL / 联表 / 联表分页）** | `references/10-xml.md` | 联表别用 Wrapper 硬堆 join |
@@ -98,4 +101,4 @@ displayName: MyBatis-Plus 开发助手
 ## 版本注意
 - 依赖坐标 `com.baomidou:mybatis-plus-*`，本地 references 基于 3.5.17 整理，**3.5.x 全线适用**。
 - `v3.5.9+` 插件拆分为可选依赖（分页需额外引 `mybatis-plus-jsqlparser`）。
-- 若用户环境为 3.4.x 旧版，`PaginationInterceptor` 已被 `MybatisPlusInterceptor` 取代（3.4.0 起），相关章节已注明。
+- 若用户环境为 3.4.x 旧版：`PaginationInterceptor` 在 3.4.0 起标记废弃、**3.5.x 已移除**，应迁移到 `MybatisPlusInterceptor`（见 `references/13-migration.md`）；3.4.x 暂无 jsqlparser 拆分，勿按 3.5.9+ 引依赖。
