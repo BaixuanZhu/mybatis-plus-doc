@@ -11,7 +11,7 @@ description: >-
   不适用于：JPA/Hibernate、数据库表结构设计/DDL、纯 SQL 性能调优。
   纯 MyBatis 原生项目仅 XML Mapper 和事务章节部分适用。
 agent_created: true
-version: 2.0.0
+version: 2.0.1
 slug: mybatis-plus-dev
 displayName: MyBatis-Plus 开发助手
 ---
