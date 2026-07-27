@@ -66,10 +66,7 @@ mybatis-plus:
 
 ## 3. 乐观锁插件
 
-```java
-// 见上方 MybatisPlusInterceptor 中的 OptimisticLockerInnerInterceptor
-```
-实体字段加 `@Version`（见 `03-entity.md`）。更新时自动 `set version = version + 1 where version = ?`，版本不符则影响行数为 0。
+在 §1 插件容器中已注册 `OptimisticLockerInnerInterceptor`；实体字段加 `@Version`（见 `03-entity.md` §5），更新时自动 `set version = version + 1 where version = ?`，版本不符则影响行数为 0。
 
 ## 4. 自动填充
 

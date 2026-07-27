@@ -302,29 +302,9 @@ public User createAndReturn(User user) {
 }
 ```
 
-### PlatformTransactionManager
+### PlatformTransactionManager（低频，按需）
 
-```java
-@Autowired
-private PlatformTransactionManager transactionManager;
-
-public void manualTransaction() {
-    DefaultTransactionDefinition def = new DefaultTransactionDefinition();
-    def.setPropagationBehavior(TransactionDefinition.PROPAGATION_REQUIRES_NEW);
-    def.setIsolationLevel(TransactionDefinition.ISOLATION_READ_COMMITTED);
-    def.setTimeout(30);  // 30 秒超时
-
-    TransactionStatus status = transactionManager.getTransaction(def);
-    try {
-        save(entity);
-        doOtherWork();
-        transactionManager.commit(status);
-    } catch (Exception e) {
-        transactionManager.rollback(status);
-        throw e;
-    }
-}
-```
+> 更低层的 `PlatformTransactionManager` 手动 API（`getTransaction` / `commit` / `rollback`）仅在需要超细粒度控制时使用，日常几乎不需要。需要时注入 `PlatformTransactionManager`，按标准 Spring 写法（`DefaultTransactionDefinition` 设传播/隔离/超时 → `getTransaction` → `commit`/`rollback`）操作即可。
 
 > 编程式事务适用于：条件性回滚、动态传播行为、超细粒度事务控制。日常用声明式 `@Transactional` 即可。
 

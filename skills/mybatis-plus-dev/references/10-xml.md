@@ -321,16 +321,7 @@ IPage<UserVO> selectUserPage(IPage<UserVO> page, @Param("query") UserQueryDTO qu
     </set>
 </insert>
 
-<!-- 更新（动态字段） -->
-<update id="updateUser" parameterType="com.example.entity.User">
-    UPDATE sys_user
-    <set>
-        <if test="name != null and name != ''">user_name = #{name},</if>
-        <if test="age != null">age = #{age},</if>
-        <if test="email != null">email = #{email},</if>
-    </set>
-    WHERE id = #{id}
-</update>
+<!-- 更新：`set` 内的 `<if>` 分支与上方插入完全一致，仅外层换 `<update>` 并加 `WHERE id = #{id}` -->
 
 <!-- 批量插入 -->
 <insert id="batchInsert" parameterType="java.util.List">

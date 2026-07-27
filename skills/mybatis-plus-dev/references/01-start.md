@@ -4,7 +4,7 @@
 
 ## 1. 添加依赖
 
-依 SpringBoot 版本选 starter：
+> **依赖通用规则**：所有坐标 `com.baomidou:mybatis-plus-*`，版本统一 3.5.17；切勿同时引入 `mybatis` / `mybatis-spring-boot-starter` / `mybatis-spring`（会与 MP 自带 MyBatis 冲突）。
 
 **SpringBoot 2.x（Maven）**
 ```xml
@@ -48,9 +48,7 @@
     <version>3.5.17</version>
 </dependency>
 ```
-> 不引 jsqlparser，`PaginationInnerInterceptor` 无法工作（静默失效，无报错）。详见 `02-config.md`。
-
-**不要**再引入 `mybatis` / `mybatis-spring-boot-starter` / `myBatis-Spring`，避免版本冲突。
+> 不引 jsqlparser，`PaginationInnerInterceptor` 无法工作（静默失效，无报错）。
 
 ## 2. 最小配置
 

@@ -55,15 +55,7 @@ public class User {
 
 ## 4. 字段策略与 null 不更新（重点）
 
-`FieldStrategy` 决定字段何时进入 SQL（完整说明见 `02-config.md` §7）：
-
-| 策略 | 行为 |
-|---|---|
-| `DEFAULT` / `NOT_NULL` | 值为 `null` 时不参与更新 / 插入（**默认**） |
-| `ALWAYS` | 无论 null 与否都参与（可把字段更新为 null） |
-| `NOT_EMPTY` | 字符串空串也不参与 |
-| `NEVER` | 永远不参与（只读字段） |
-| `IGNORED` | **@Deprecated**，等价于 `ALWAYS`，旧代码应迁移 |
+`FieldStrategy` 决定字段何时进入 SQL，**完整策略清单与全局配置见 `02-config.md` §7**（含 `ALWAYS`/`NEVER`/`IGNORED` 弃用说明）。
 
 **默认情况下 `updateById(entity)` 中 `null` 字段不会写入 SQL**，这正是"为什么 update 后某些字段没变"的根因（全局 `updateStrategy` 默认 `NOT_NULL`）。
 

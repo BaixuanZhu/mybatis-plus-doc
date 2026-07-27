@@ -11,7 +11,7 @@ description: >-
   不适用于：JPA/Hibernate、数据库表结构设计/DDL、纯 SQL 性能调优。
   纯 MyBatis 原生项目仅 XML Mapper 和事务章节部分适用。
 agent_created: true
-version: 1.0.6
+version: 2.0.0
 slug: mybatis-plus-dev
 displayName: MyBatis-Plus 开发助手
 ---
@@ -43,31 +43,12 @@ displayName: MyBatis-Plus 开发助手
 
 > **检查点**：判定为「不适用」→ 告知用户当前问题不在 MyBatis-Plus 范围，建议退出本技能。判定为「部分适用」→ 告知仅 `10-xml.md` + `11-transaction.md` 可参考，其余不适用，让用户确认是否继续。
 
-## 常见任务速查
+## 主动行为触发（见到这些代码模式时主动提醒）
 
-| 任务 | 先读 | 同时警告 |
-|------|------|---------|
-| 集成 + 分页跑不通 | `01-start.md` | 需引 `mybatis-plus-jsqlparser`（v3.5.9+） |
-| 单表 CRUD | `04-crud.md` | null 不更新；优先父类方法 |
-| 条件查询 | `05-wrapper.md` | Wrapper 不可复用；`apply` 用 `{0}` 占位 |
-| 联表查询 | `10-xml.md` | 别用 Wrapper 硬堆 join |
-| 事务 / 不回滚 | `11-transaction.md` | rollbackFor 必须显式；自调用不走代理 |
-| 逻辑删除 | `02-config.md` | 推荐 0+时间戳；唯一索引含 deleted |
-| 枚举映射 | `03-entity.md` | @EnumValue + @JsonValue + XML typeHandler |
-| 字段策略配置 | `02-config.md` §7 | 全局改 `ALWAYS` 会误清数据，用字段级覆盖 |
-
-## 主动行为触发
-
-| 代码模式 | 主动提醒 |
-|---------|---------|
-| `selectPage` / `page` | 确认引了 `jsqlparser` + 注册了 `PaginationInnerInterceptor` |
-| `updateById` + null 字段 | null 不更新，需置空用 `UpdateWrapper.set()` |
-| `@Transactional` 无 `rollbackFor` | 显式指定 `rollbackFor = Exception.class` |
-| `apply()` 字符串拼接 | 改用 `{0}` 占位 + `SqlInjectionUtils.check()` |
-| Wrapper 被多次复用 | 不可复用，每次 new |
-| XML 枚举字段 | 每处都要 `typeHandler=MybatisEnumTypeHandler` |
-| Wrapper 硬堆 join | 改写 XML |
-| `saveBatch` 当高性能批量 | 默认非 BATCH executor |
+- `selectPage` / `page` → 确认引了 `mybatis-plus-jsqlparser` + 注册 `PaginationInnerInterceptor`（否则分页静默失效）
+- `@Transactional` 无 `rollbackFor` → 显式指定 `rollbackFor = Exception.class`
+- `saveBatch` 当高性能批量 → 默认非 BATCH executor，量大需配 `BatchExecutor`（见 `04-crud.md`）
+- 其余触发（null 不更新 / `apply` 注入 / Wrapper 复用 / XML 枚举 typeHandler / join 改写 XML）→ 见上方「核心强约束」#3/#4/#7/#8/#9 与下方「使用流程」自检清单
 
 ## 核心强约束（Agent 必须遵守）
 
@@ -83,30 +64,21 @@ displayName: MyBatis-Plus 开发助手
 
 ## 决策路由（全部本地，无在线 fetch）
 
-| 需求场景 | 读取文件 |
-|---|---|
-| 依赖、starter 选择、最小配置、基础 CRUD 跑通 | `references/01-start.md` |
-| 全局配置：分页插件、逻辑删除全局、乐观锁、自动填充、防全表、**字段策略(insertStrategy/updateStrategy/whereStrategy)**、DbConfig/Configuration 速查 | `references/02-config.md` |
-| 实体映射：@TableId 策略、@TableField(字段策略/null/JSON)、**枚举映射(@EnumValue/IEnum/@JsonValue)**、@Version、@TableLogic | `references/03-entity.md` |
-| BaseMapper vs IService、继承范式、优先父类方法、saveBatch、null 不更新 | `references/04-crud.md` |
-| QueryWrapper vs LambdaQueryWrapper、条件构造、apply 防注入、空值语义 | `references/05-wrapper.md` |
-| 分页：Page/IPage、自定义 count、联表分页 XML | `references/06-page.md` |
-| 插件：逻辑删除/自动填充/乐观锁/多租户/动态表名/数据权限/防全表 | `references/07-plugin.md` |
-| **Agent 常见错误与最佳实践（重点看）** | `references/08-antipattern.md` |
-| SQL 日志开启、常见异常与分页失效排查 | `references/09-troubleshoot.md` |
-| **MyBatis XML Mapper 编写（mapper-locations / resultMap / 动态 SQL / 联表 / 联表分页）** | `references/10-xml.md` |
-| **事务管理（@Transactional / 事务失效 / saveBatch 事务 / 多数据源 / 编程式事务）** | `references/11-transaction.md` |
+| 需求场景 | 读取文件 | 关键提醒 |
+|---|---|---|
+| 依赖、starter 选择、最小配置、基础 CRUD 跑通 | `references/01-start.md` | SB3 用 `spring-boot3-starter`；分页必引 `mybatis-plus-jsqlparser`（v3.5.9+，否则静默失效） |
+| 全局配置：分页插件、逻辑删除全局、乐观锁、自动填充、防全表、**字段策略(insertStrategy/updateStrategy/whereStrategy)**、DbConfig/Configuration 速查 | `references/02-config.md` | 逻辑删除推荐 0+时间戳；唯一索引含 deleted；字段策略全局改 `ALWAYS` 会误清数据 |
+| 实体映射：@TableId 策略、@TableField(字段策略/null/JSON)、**枚举映射(@EnumValue/IEnum/@JsonValue)**、@Version、@TableLogic | `references/03-entity.md` | 枚举 @EnumValue+@JsonValue；XML 每处 typeHandler |
+| BaseMapper vs IService、继承范式、优先父类方法、saveBatch、null 不更新 | `references/04-crud.md` | 优先父类方法；null 不更新用 `UpdateWrapper.set` |
+| QueryWrapper vs LambdaQueryWrapper、条件构造、apply 防注入、空值语义 | `references/05-wrapper.md` | Wrapper 不可复用；`apply` 用 `{0}` 占位 + `SqlInjectionUtils.check` |
+| 分页：Page/IPage、自定义 count、联表分页 XML | `references/06-page.md` | IPage 非 null 非 List；ORDER BY 写 XML |
+| 插件：逻辑删除/自动填充/乐观锁/多租户/动态表名/数据权限/防全表 | `references/07-plugin.md` | 插件顺序：分页最后 |
+| **Agent 常见错误与最佳实践（重点看）** | `references/08-antipattern.md` | — |
+| SQL 日志开启、常见异常与分页失效排查 | `references/09-troubleshoot.md` | — |
+| **MyBatis XML Mapper 编写（mapper-locations / resultMap / 动态 SQL / 联表 / 联表分页）** | `references/10-xml.md` | 联表别用 Wrapper 硬堆 join |
+| **事务管理（@Transactional / 事务失效 / saveBatch 事务 / 多数据源 / 编程式事务）** | `references/11-transaction.md` | rollbackFor 必须显式；自调用不走代理；多数据源单 `@Transactional` 限单库 |
 
-> **多场景交叉优先级**：当需求同时命中多个 references 时，按下表确定阅读顺序：
->
-> | 组合场景 | 先读 | 再读 | 原因 |
-> |---------|------|------|------|
-> | 分页 + 联表 XML | `06-page.md` | `10-xml.md` | 先确认 IPage 分页机制，再写联表 SQL |
-> | 枚举 + XML 自定义查询 | `03-entity.md` | `10-xml.md` | 先确认枚举映射策略，再在 XML 声明 typeHandler |
-> | 逻辑删除 + 多租户 | `07-plugin.md` | `02-config.md` | 先确认插件顺序，再配全局逻辑删除 |
-> | 批量插入 + 事务 | `04-crud.md` | `11-transaction.md` | 先确认 saveBatch 语义，再查事务配置与失效排查 |
-> | 事务 + 多数据源 | `11-transaction.md` | `02-config.md` | 先确认事务边界与 @DS 陷阱，再查数据源配置 |
-> | 事务回滚排查 | `11-transaction.md` | `08-antipattern.md` | 先确认事务失效场景，再对照 antipattern §18-§21 纠偏 |
+> **组合场景阅读顺序**：先读机制类（`01`/`02`/`03`/`04`/`05`/`06`/`07`），再读落地/纠偏类（`08`/`09`/`10`/`11`）。例：分页+联表→先 `06` 后 `10`；枚举+XML→先 `03` 后 `10`；逻辑删除+多租户→先 `07` 后 `02`；批量+事务→先 `04` 后 `11`；事务+多数据源→先 `11` 后 `02`；事务回滚排查→先 `11` 后 `08`。
 
 ## 使用流程
 
