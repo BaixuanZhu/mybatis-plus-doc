@@ -2,16 +2,19 @@
 name: mybatis-plus-dev
 description: >-
   MyBatis-Plus（baomidou）Java ORM 增强框架开发助手。
-  适用于：项目已使用 MyBatis-Plus 依赖（mybatis-plus-boot-starter 及 mybatis-plus-spring-boot*-starter 系列，覆盖 SpringBoot 2/3/4）、BaseMapper/IService 继承体系、
-  QueryWrapper/LambdaQueryWrapper 条件构造、分页插件（PaginationInnerInterceptor）、
-  逻辑删除（@TableLogic）、自动填充（MetaObjectHandler）、乐观锁（@Version）、
-  枚举映射（@EnumValue/IEnum）、@TableId/@TableField 字段映射、saveBatch 批量、
-  MyBatis XML Mapper 编写、事务管理（@Transactional/事务失效排查），
-  以及 null 不更新、分页失效、SQL 注入、字段映射错误等问题排查。
-  不适用于：JPA/Hibernate、数据库表结构设计/DDL、纯 SQL 性能调优（连接池调优、索引策略、慢查询分析属数据源/DBA 层，不在本 skill）。MP 专属性能（批量 BATCH / InsertBatchSomeColumn / 一级缓存 / 流式大结果集）见 `references/04-crud.md §3`。
-  纯 MyBatis 原生项目仅 XML Mapper 和事务章节部分适用。
+  在 Java / Spring Boot 项目中开发任何数据库增删改查（CRUD）、分页查询、条件查询、
+  Mapper / DAO / Service 层、实体类与表映射、逻辑删除、批量插入、乐观锁、自动填充、
+  事务管理、SQL / XML Mapper 相关功能时使用本技能——无论用户是否提到 MyBatis-Plus
+  （CRUD / pagination / ORM / DAO / database query / entity mapping / transaction）。
+  项目依赖已含 mybatis-plus（mybatis-plus-boot-starter 及 mybatis-plus-spring-boot*-starter
+  系列，覆盖 SpringBoot 2/3/4）或代码出现 BaseMapper / IService / ServiceImpl /
+  QueryWrapper / LambdaQueryWrapper / @TableId / @TableField / @TableLogic / saveBatch /
+  selectPage 时必须使用本技能；纯 MyBatis、无 ORM 或 ORM 未知项目，先主动询问用户是否引入
+  MyBatis-Plus 再开发。
+  不适用于：已使用 JPA / Hibernate 的项目（不建议迁移）、数据库表结构设计/DDL、纯 SQL 性能调优
+  （连接池/索引/慢查询属 DBA 层）。
 agent_created: true
-version: 2.1.0
+version: 2.2.0
 slug: mybatis-plus-dev
 displayName: MyBatis-Plus 开发助手
 ---
@@ -32,14 +35,26 @@ displayName: MyBatis-Plus 开发助手
 - **切勿**同时引入 `mybatis` / `mybatis-spring-boot-starter` / `mybatis-spring`，会与 MP 版本冲突。
 - **分页必引** `mybatis-plus-jsqlparser`（自 v3.5.9 起 `PaginationInnerInterceptor` 已从核心拆分，单独成依赖；否则分页静默失效）。JDK8 项目用 `mybatis-plus-jsqlparser-4.9`。
 
+## 第 0 步：依赖探测与激活分支（收到数据库访问类任务先做这一步）
+
+任务涉及增删改查、分页、条件查询、Mapper/DAO/Service 层、实体映射、事务等编码——**即使用户没提 MyBatis-Plus**——先检索项目依赖（在 `pom.xml` / `build.gradle` 中搜 `mybatis-plus`、`mybatis`、`spring-boot-starter-data-jpa`、`hibernate`）：
+
+| 探测结果 | 动作 |
+|---|---|
+| 依赖含 `mybatis-plus-*` | 直接激活本技能，走下方流程 |
+| 纯 MyBatis 原生（无 MP） | 按「部分适用」规则（仅 `10-xml.md` + `11-transaction.md`），同时**询问**用户是否引入 MyBatis-Plus（单表 CRUD 免写 SQL，与现有 XML 共存） |
+| 无任何 ORM | **主动询问**用户是否引入 MyBatis-Plus；同意 → 按「版本与依赖」表 + `references/01-start.md` 引入后继续；拒绝 → 退出本技能，不再打扰 |
+| 已使用 JPA / Hibernate | 告知不适用并退出，**不建议迁移** |
+
 ## 何时使用本技能
 
 | 信号 | 判定 |
 |------|------|
+| Java/SpringBoot 项目中的 CRUD/分页/条件查询/Mapper 层/实体映射/事务任务（未指明框架） | 激活，先执行「第 0 步」依赖探测 |
 | 依赖含 `mybatis-plus-*` / 代码 `extends BaseMapper` / `extends ServiceImpl` / 使用 Wrapper / `IService` / `saveBatch` / `selectPage` | 激活 |
 | 提到 `@TableLogic` / `@TableField` / `@EnumValue` / `@Version` / `@TableId` / "MyBatis-Plus" / "MP" / "baomidou" | 激活 |
 | 纯 MyBatis 原生（无 MP），仅问 XML / 事务 | 部分适用（仅 `references/10-xml.md` + `11-transaction.md`） |
-| JPA / Hibernate / 表结构设计 / DDL / 纯 SQL 调优 | 不适用 |
+| JPA / Hibernate（不建议迁移）/ 表结构设计 / DDL / 纯 SQL 调优 | 不适用 |
 
 > **检查点**：判定为「不适用」→ 告知用户当前问题不在 MyBatis-Plus 范围，建议退出本技能。判定为「部分适用」→ 告知仅 `10-xml.md` + `11-transaction.md` 可参考，其余不适用，让用户确认是否继续。
 
@@ -70,7 +85,7 @@ displayName: MyBatis-Plus 开发助手
 | 依赖、starter 选择、最小配置、基础 CRUD 跑通 | `references/01-start.md` | SB3 用 `spring-boot3-starter`；分页必引 `mybatis-plus-jsqlparser`（v3.5.9+，否则静默失效） |
 | 全局配置：分页插件、逻辑删除全局、乐观锁、自动填充、防全表、**字段策略(insertStrategy/updateStrategy/whereStrategy)**、DbConfig/Configuration 速查 | `references/02-config.md` | 逻辑删除推荐 0+时间戳；唯一索引含 deleted；字段策略全局改 `ALWAYS` 会误清数据 |
 | 实体映射：@TableId 策略、@TableField(字段策略/null/JSON)、**枚举映射(@EnumValue/IEnum/@JsonValue)**、@Version、@TableLogic | `references/03-entity.md` | 枚举 @EnumValue+@JsonValue；XML 每处 typeHandler |
-| BaseMapper vs IService、继承范式、优先父类方法、saveBatch、null 不更新 | `references/04-crud.md` | 优先父类方法；null 不更新用 `UpdateWrapper.set` |
+| BaseMapper vs IService、继承范式、优先父类方法、saveBatch、null 不更新、**MP 专属性能（批量 BATCH / InsertBatchSomeColumn / 一级缓存 / 流式大结果集，见 §3）** | `references/04-crud.md` | 优先父类方法；null 不更新用 `UpdateWrapper.set` |
 | QueryWrapper vs LambdaQueryWrapper、条件构造、apply 防注入、空值语义 | `references/05-wrapper.md` | Wrapper 不可复用；`apply` 用 `{0}` 占位 + `SqlInjectionUtils.check` |
 | 分页：Page/IPage、自定义 count、联表分页 XML | `references/06-page.md` | IPage 非 null 非 List；ORDER BY 写 XML |
 | 插件：逻辑删除/自动填充/乐观锁/多租户/动态表名/数据权限/防全表 | `references/07-plugin.md` | 插件顺序：分页最后 |
@@ -85,7 +100,7 @@ displayName: MyBatis-Plus 开发助手
 
 ## 使用流程
 
-1. **确认 MP 适用性**：看依赖 / Mapper 继承 / Wrapper 使用。不适用 → 告知用户并建议退出；部分适用 → 告知范围并让用户确认；正常 → 继续。
+1. **确认 MP 适用性**：先执行「第 0 步：依赖探测与激活分支」；依赖缺失时主动询问是否引入 MyBatis-Plus。不适用 → 告知用户并建议退出；部分适用 → 告知范围并让用户确认；正常 → 继续。
 2. **定位 reference**：查上方「决策路由」表，读对应文件。
 3. **编码遵循强约束**：先看 9 条核心强约束，再读 reference 给代码。
 4. **遇异常先查排错**：`references/09-troubleshoot.md` + `references/08-antipattern.md`。
