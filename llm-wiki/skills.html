@@ -5,10 +5,10 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <link rel="icon" href="favicon.ico" type="image/x-icon">
   <title>MyBatis-Plus 开发 Skill — AI 编程助手专用 | CRUD 速查 · 反模式纠偏 · 离线自包含</title>
-  <meta name="description" content="MyBatis-Plus 开发辅助 Skill，AI 编程助手专用。完全本地自包含，含 11 篇参考和 23 条反模式纠偏，覆盖 CRUD、条件构造器、分页、逻辑删除、事务等场景。">
+  <meta name="description" content="MyBatis-Plus 开发辅助 Skill，AI 编程助手专用。完全本地自包含、离线可用，覆盖 CRUD、条件构造、分页、逻辑删除、事务等日常开发场景。">
   <meta name="keywords" content="MyBatis-Plus Skill, mybatis-plus-dev, AI编程助手, CRUD速查, 反模式纠偏, 条件构造器, BaseMapper, IService, 分页插件, 逻辑删除, 事务管理">
   <meta property="og:title" content="MyBatis-Plus 开发 Skill — AI 编程助手专用">
-  <meta property="og:description" content="完全本地自包含，含 11 篇参考和 23 条反模式纠偏，覆盖 CRUD、条件构造器、分页、事务等场景">
+  <meta property="og:description" content="完全本地自包含、离线可用，覆盖 CRUD、条件构造、分页、逻辑删除、事务等日常开发场景">
   <meta property="og:type" content="website">
   <meta property="og:url" content="https://baixuanzhu.github.io/mybatis-plus-doc/skills.html">
   <meta property="og:image" content="https://baixuanzhu.github.io/mybatis-plus-doc/favicon.ico">
@@ -39,11 +39,10 @@
     }
 
     /* ── Header ── */
-    .header { text-align: center; padding: 60px 20px 32px; }
+    .header { text-align: center; padding: 16px 20px 32px; }
     .header .logo { width: 64px; height: 64px; margin-bottom: 14px; border-radius: 12px; }
     .header .title-row { display: flex; align-items: baseline; justify-content: center; gap: 10px; }
     .header h1 { font-size: 32px; font-weight: 700; color: #1a1a1a; letter-spacing: -0.5px; }
-    .header .version { font-size: 14px; color: var(--accent); font-weight: 500; background: var(--accent-light); padding: 2px 10px; border-radius: 20px; }
     .header .subtitle { margin-top: 8px; font-size: 15px; color: var(--text-secondary); }
 
     /* ── Main ── */
@@ -60,22 +59,6 @@
     .doc-section h2 { font-size: 18px; font-weight: 600; margin-bottom: 12px; color: var(--text); }
     .doc-section p { font-size: 14px; color: var(--text-secondary); line-height: 1.75; }
     .doc-section p code { color: var(--text-secondary); font-size: 13px; }
-
-    /* ── Tree ── */
-    .tree {
-      font-family: "SFMono-Regular", Consolas, "Liberation Mono", Menlo, monospace;
-      font-size: 13px;
-      background: var(--bg);
-      border-radius: 8px;
-      padding: 16px 18px;
-      line-height: 1.9;
-      color: var(--text);
-      overflow-x: auto;
-    }
-    .tree .dir { color: var(--accent-dark); font-weight: 600; }
-    .tree .comment { color: var(--text-muted); }
-    .tree a { color: var(--accent); text-decoration: none; }
-    .tree a:hover { text-decoration: underline; }
 
     /* ── Code block ── */
     .code-wrap { position: relative; margin-top: 14px; }
@@ -102,19 +85,35 @@
       background: #2a2a3a;
     }
 
-    /* ── Download button ── */
-    .btn-download {
-      display: inline-block;
-      margin-top: 14px;
-      padding: 12px 22px;
-      background: var(--accent);
-      color: #fff;
-      border-radius: var(--radius);
-      text-decoration: none;
+    /* ── Back home ── */
+    .back-home {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      margin-top: 28px;
       font-size: 14px;
-      font-weight: 500;
+      color: var(--text-secondary);
+      text-decoration: none;
+      transition: color 0.2s;
     }
-    .btn-download:hover { background: var(--accent-dark); }
+    .back-home:hover { color: var(--accent); }
+
+    /* ── SkillHub button ── */
+    .btn-skillhub {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      margin-top: 14px;
+      padding: 8px 16px;
+      border: 1px solid var(--accent);
+      color: var(--accent);
+      border-radius: 8px;
+      text-decoration: none;
+      font-size: 13px;
+      font-weight: 500;
+      transition: background 0.2s, color 0.2s;
+    }
+    .btn-skillhub:hover { background: var(--accent-light); }
 
     /* ── Install section ── */
     .install-block { margin-top: 18px; }
@@ -125,43 +124,23 @@
       padding: 2px 8px; border-radius: 4px; margin-left: 8px;
       vertical-align: middle;
     }
-    .badge-alt {
-      display: inline-block; font-size: 12px; font-weight: 500;
-      color: var(--text-muted); background: var(--bg);
-      padding: 2px 8px; border-radius: 4px; margin-left: 8px;
-      vertical-align: middle;
-    }
-    .install-steps { counter-reset: step; margin-top: 12px; padding-left: 0; list-style: none; }
-    .install-steps li {
-      counter-increment: step; position: relative;
-      padding-left: 32px; margin-bottom: 14px;
-      font-size: 14px; color: var(--text-secondary); line-height: 1.75;
-    }
-    .install-steps li::before {
-      content: counter(step); position: absolute; left: 0; top: 0;
-      width: 22px; height: 22px; line-height: 22px; text-align: center;
-      background: var(--accent-light); color: var(--accent);
-      border-radius: 50%; font-size: 12px; font-weight: 600;
-    }
-    .path-table { width: 100%; margin-top: 8px; border-collapse: collapse; font-size: 13px; }
-    .path-table td { padding: 4px 8px; border-bottom: 1px solid var(--border); }
-    .path-table td:first-child { color: var(--text); font-weight: 500; white-space: nowrap; }
-    .path-table td:last-child code { color: var(--accent-dark); font-size: 12px; }
 
-    /* ── Footer / back ── */
-    .back-link { display: block; text-align: center; margin: 8px 0 28px; font-size: 14px; color: var(--accent); text-decoration: none; }
-    .back-link:hover { text-decoration: underline; }
+    /* ── Footer ── */
     .footer { margin-top: auto; padding: 40px 20px; text-align: center; font-size: 13px; color: var(--text-muted); }
     .footer a { color: var(--text-muted); text-decoration: none; }
     .footer a:hover { color: var(--accent); }
   </style>
 </head>
 <body>
+  <a class="back-home" href="index.html">
+    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"/></svg>
+    返回 LLM Wiki 首页
+  </a>
+
   <header class="header">
     <img class="logo" src="favicon.ico" alt="MyBatis-Plus">
     <div class="title-row">
       <h1>Skills</h1>
-      <span class="version">3.5.x 全线适用</span>
     </div>
     <p class="subtitle">MyBatis-Plus 开发辅助 Skill — 完全本地自包含，离线可用</p>
   </header>
@@ -169,34 +148,7 @@
   <main class="main">
     <div class="doc-section">
       <h2>这是什么</h2>
-      <p>给 AI 编程助手用的 MyBatis-Plus 开发 Skill。<strong>3.5.x 全线适用</strong>，3.4.x 大部分兼容。完全本地自包含，不依赖外部文档站点，离线可用。11 篇本地参考覆盖从依赖配置到事务管理、XML Mapper 编写的全链路，附带 23 条反模式纠偏、输出前 7 项自检清单和多场景交叉路由指引。</p>
-    </div>
-
-    <div class="doc-section">
-      <h2>适用场景</h2>
-      <p><strong>适用于：</strong>项目已集成 MyBatis-Plus（pom.xml 含 mybatis-plus-* 依赖），涉及 CRUD、条件构造、分页、逻辑删除、自动填充、乐观锁、枚举映射、XML Mapper、事务管理等日常开发任务。</p>
-      <p><strong>不适用于：</strong>JPA / Hibernate、数据库表结构设计 / DDL、纯 SQL 性能调优。</p>
-      <p><strong>部分适用：</strong>纯 MyBatis 原生项目（无 MP 依赖）——仅 XML Mapper 编写和事务管理章节可参考。</p>
-    </div>
-
-    <div class="doc-section">
-      <h2>目录结构</h2>
-      <div class="tree">
-<span class="dir">mybatis-plus-dev/</span><br>
-├── <a href="skills/mybatis-plus-dev/SKILL.md">SKILL.md</a> <span class="comment"># 适用判断 + 独特价值 + 快速路由 + 主动行为 + 9条强约束 + 决策路由 + 7项自检</span><br>
-└── <span class="dir">references/</span><br>
-&nbsp;&nbsp;&nbsp;&nbsp;├── <a href="skills/mybatis-plus-dev/references/01-start.md">01-start.md</a> <span class="comment">依赖(starter选择) + jsqlparser必引 + 最小配置 + 基础CRUD</span><br>
-&nbsp;&nbsp;&nbsp;&nbsp;├── <a href="skills/mybatis-plus-dev/references/02-config.md">02-config.md</a> <span class="comment">分页插件 + 逻辑删除(0+毫秒时间戳/6DB方言) + 乐观锁 + 自动填充 + 防全表</span><br>
-&nbsp;&nbsp;&nbsp;&nbsp;├── <a href="skills/mybatis-plus-dev/references/03-entity.md">03-entity.md</a> <span class="comment">@TableId(AUTO默认)/@TableField字段策略/null不更新/枚举映射/@Version/@TableLogic/时间字段</span><br>
-&nbsp;&nbsp;&nbsp;&nbsp;├── <a href="skills/mybatis-plus-dev/references/04-crud.md">04-crud.md</a> <span class="comment">BaseMapper vs IService + 继承范式 + saveBatch真相</span><br>
-&nbsp;&nbsp;&nbsp;&nbsp;├── <a href="skills/mybatis-plus-dev/references/05-wrapper.md">05-wrapper.md</a> <span class="comment">LambdaQueryWrapper + apply防注入 + 空值语义 + 不可复用</span><br>
-&nbsp;&nbsp;&nbsp;&nbsp;├── <a href="skills/mybatis-plus-dev/references/06-page.md">06-page.md</a> <span class="comment">Page/IPage + 联表分页XML</span><br>
-&nbsp;&nbsp;&nbsp;&nbsp;├── <a href="skills/mybatis-plus-dev/references/07-plugin.md">07-plugin.md</a> <span class="comment">多租户/动态表名/数据权限（全本地）</span><br>
-&nbsp;&nbsp;&nbsp;&nbsp;├── <a href="skills/mybatis-plus-dev/references/08-antipattern.md">08-antipattern.md</a> <span class="comment">★ 23条 Agent常见错误纠偏（含事务失效6条，核心价值）</span><br>
-&nbsp;&nbsp;&nbsp;&nbsp;├── <a href="skills/mybatis-plus-dev/references/09-troubleshoot.md">09-troubleshoot.md</a> <span class="comment">SQL日志 + 异常定位 + 分页失效排查</span><br>
-&nbsp;&nbsp;&nbsp;&nbsp;├── <a href="skills/mybatis-plus-dev/references/10-xml.md">10-xml.md</a> <span class="comment">XML Mapper编写指南(resultMap/动态SQL/联表/枚举typeHandler)</span><br>
-│&nbsp;&nbsp;&nbsp;&nbsp;└── <a href="skills/mybatis-plus-dev/references/11-transaction.md">11-transaction.md</a> <span class="comment">@Transactional/传播行为/事务失效7大场景/saveBatch与事务/多数据源陷阱</span>
-      </div>
+      <p>给 AI 编程助手用的 MyBatis-Plus 开发辅助包，覆盖 CRUD、条件构造、分页、逻辑删除、事务等日常开发场景，完全本地离线可用。</p>
     </div>
 
     <div class="doc-section">
@@ -209,21 +161,9 @@
           <button class="copy-btn" onclick="copyCode(this)">复制</button>
           <pre class="code"><code>请根据 https://skillhub.cn/install/skillhub.md，安装 mybatis-plus-dev。</code></pre>
         </div>
-      </div>
-
-      <div class="install-block" style="margin-top:20px;border-top:1px solid var(--border);padding-top:18px">
-        <h3 style="font-size:15px;font-weight:600;margin-bottom:4px">手动下载 zip<span class="badge-alt">备选</span></h3>
-        <p>直接下载安装包，解压后放入 skills 目录：</p>
-        <div class="code-wrap">
-          <button class="copy-btn" onclick="copyCode(this)">复制</button>
-          <pre class="code"><code>curl -L https://baixuanzhu.github.io/mybatis-plus-doc/skills/mybatis-plus-dev.zip -o mybatis-plus-dev.zip</code></pre>
-        </div>
-        <p style="margin-top:14px"><a class="btn-download" href="skills/mybatis-plus-dev.zip">⬇ 下载 mybatis-plus-dev.zip</a></p>
-        <p style="margin-top:8px;font-size:13px;color:var(--text-muted)">解压后将 <code>mybatis-plus-dev/</code> 文件夹放入你所用 AI 编程助手的技能目录即可使用。</p>
+        <p style="margin-top:14px"><a class="btn-skillhub" href="https://skillhub.cn/skills/user_a36dc51e/mybatis-plus-dev" target="_blank" rel="noopener">在 SkillHub 查看<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg></a></p>
       </div>
     </div>
-
-    <a class="back-link" href="index.html">← 返回 LLM Wiki 首页</a>
   </main>
 
   <footer class="footer">
