@@ -39,7 +39,7 @@
     }
 
     /* ── Header ── */
-    .header { text-align: center; padding: 16px 20px 32px; }
+    .header { text-align: center; padding: 60px 20px 32px; }
     .header .logo { width: 64px; height: 64px; margin-bottom: 14px; border-radius: 12px; }
     .header .title-row { display: flex; align-items: baseline; justify-content: center; gap: 10px; }
     .header h1 { font-size: 32px; font-weight: 700; color: #1a1a1a; letter-spacing: -0.5px; }
@@ -90,7 +90,7 @@
       display: inline-flex;
       align-items: center;
       gap: 6px;
-      margin-top: 28px;
+      margin: 0 0 16px;
       font-size: 14px;
       color: var(--text-secondary);
       text-decoration: none;
@@ -132,11 +132,6 @@
   </style>
 </head>
 <body>
-  <a class="back-home" href="index.html">
-    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"/></svg>
-    返回 LLM Wiki 首页
-  </a>
-
   <header class="header">
     <img class="logo" src="favicon.ico" alt="MyBatis-Plus">
     <div class="title-row">
@@ -146,6 +141,11 @@
   </header>
 
   <main class="main">
+    <a class="back-home" href="index.html">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"/></svg>
+      返回 LLM Wiki 首页
+    </a>
+
     <div class="doc-section">
       <h2>这是什么</h2>
       <p>给 AI 编程助手用的 MyBatis-Plus 开发辅助包，覆盖 CRUD、条件构造、分页、逻辑删除、事务等日常开发场景，完全本地离线可用。</p>

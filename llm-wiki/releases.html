@@ -1,0 +1,738 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="icon" href="favicon.ico" type="image/x-icon">
+  <title>MyBatis-Plus 最近更新 — 官方 Releases 日志</title>
+  <meta name="description" content="MyBatis-Plus 官方 GitHub Releases 版本发布日志，随 CI 自动同步。">
+  <style>
+    :root {
+      --accent: #409EFF;
+      --accent-dark: #337ecc;
+      --accent-light: #ecf5ff;
+      --text: #2c3e50;
+      --text-secondary: #666;
+      --text-muted: #999;
+      --bg: #f8f9fa;
+      --card-bg: #fff;
+      --border: #eaecef;
+      --radius: 12px;
+    }
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+
+    .header { text-align: center; padding: 60px 20px 32px; }
+    .header .logo { width: 64px; height: 64px; margin-bottom: 14px; border-radius: 12px; }
+    .header h1 { font-size: 32px; font-weight: 700; color: #1a1a1a; letter-spacing: -0.5px; }
+    .header .subtitle { margin-top: 8px; font-size: 15px; color: var(--text-secondary); }
+
+    .main { width: 100%; max-width: 680px; padding: 0 20px; }
+
+    .back-home {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      margin: 0 0 16px;
+      font-size: 14px;
+      color: var(--text-secondary);
+      text-decoration: none;
+      transition: color 0.2s;
+    }
+    .back-home:hover { color: var(--accent); }
+
+    .synced { text-align: center; font-size: 13px; color: var(--text-muted); margin-bottom: 16px; }
+
+    .release-card {
+      background: var(--card-bg);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 22px 26px;
+      margin-bottom: 16px;
+    }
+    .release-head {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin-bottom: 10px;
+    }
+    .release-tag {
+      font-size: 17px;
+      font-weight: 700;
+      color: var(--accent);
+      font-family: "SFMono-Regular", Consolas, "Liberation Mono", Menlo, monospace;
+    }
+    .release-badge {
+      font-size: 12px; font-weight: 600;
+      color: #fff; background: var(--accent);
+      padding: 2px 8px; border-radius: 4px;
+    }
+    .release-date {
+      margin-left: auto;
+      font-size: 13px;
+      color: var(--text-muted);
+      font-family: "SFMono-Regular", Consolas, "Liberation Mono", Menlo, monospace;
+    }
+    .release-body { font-size: 14px; color: var(--text-secondary); line-height: 1.75; }
+    .release-body p { margin-bottom: 8px; }
+    .release-body p:last-child { margin-bottom: 0; }
+    .release-body ul, .release-body ol { padding-left: 22px; margin-bottom: 8px; }
+    .release-body ul:last-child, .release-body ol:last-child { margin-bottom: 0; }
+    .release-body li { margin-bottom: 3px; }
+    .release-body code {
+      font-size: 13px;
+      background: var(--bg);
+      border: 1px solid var(--border);
+      border-radius: 4px;
+      padding: 1px 5px;
+    }
+    .release-body a { color: var(--accent); text-decoration: none; }
+    .release-body a:hover { text-decoration: underline; }
+    .release-sub { font-size: 14px; color: var(--text); margin: 10px 0 6px; }
+    .release-empty { color: var(--text-muted); }
+    .release-link {
+      display: inline-block;
+      margin-top: 12px;
+      font-size: 13px;
+      color: var(--accent);
+      text-decoration: none;
+    }
+    .release-link:hover { text-decoration: underline; }
+
+    .footer { margin-top: auto; padding: 40px 20px; text-align: center; font-size: 13px; color: var(--text-muted); }
+    .footer a { color: var(--text-muted); text-decoration: none; }
+    .footer a:hover { color: var(--accent); }
+  </style>
+</head>
+<body>
+  <header class="header">
+    <img class="logo" src="favicon.ico" alt="MyBatis-Plus">
+    <h1>最近更新</h1>
+    <p class="subtitle">MyBatis-Plus 官方 Releases 版本日志 — 随 GitHub 自动同步</p>
+  </header>
+
+  <main class="main">
+    <a class="back-home" href="index.html">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"/></svg>
+      返回 LLM Wiki 首页
+    </a>
+
+    <p class="synced">最近同步：2026-08-20 11:33 UTC</p>
+
+    
+      <article class="release-card">
+        <div class="release-head">
+          <span class="release-tag">v3.5.17</span><span class="release-badge">最新</span>
+          <span class="release-date">2026-07-08</span>
+        </div>
+        <div class="release-body">
+          <ul>
+  <li>fix: 修复 <code>issues/6899</code> 多租户插件 <code>@Many</code> 注解查无效问题</li>
+  <li>fix: 修复 <code>issues/6938</code> <code>HashMap</code> 设置类型转换器异常</li>
+  <li>fix: 修复 <code>issues/7081</code> 解决拦截全表存在 <code>schema</code> 校验问题</li>
+  <li>fix: 修复 <code>issues/6905</code> 关于 <code>saveOrUpdateBatch</code> 导致 <code>ParameterHandler</code> 被重复执行问题</li>
+  <li>fix: 修复 <code>issues/7056</code> 支持 <code>GraalVM Native</code> 二进制编译问题，案例 https://gitee.com/baomidou/mybatis-plus-native-image-demo</li>
+  <li>fix: 修复 <code>issues/7027</code> 支持 <code>JDK 9+</code> 模块化包重名问题，注意 <code>mybatis-plus-spring</code> 模块下文件包名调整</li>
+  <li>feat: 新增 <code>wrapper</code> 支持 <code>xml</code> 别名配置</li>
+  <li>feat: 新增 <code>mybatis-plus-spring-boot-native-image</code> 模块支持 <code>graalvm</code> 编译能力</li>
+  <li>feat: 新增 <code>Wrapper</code> 支持自动识别 <code>typeHandler</code> 类型处理器</li>
+  <li>feat: 新增 <code>Wrapper</code> 对比 <code>eqOrIsNull</code> 方法</li>
+  <li>feat: 新增 <code>i18n</code> 逻辑删除日期格式及自动更新填充能力</li>
+  <li>feat: 新增 <code>Groovy</code> 支持 <code>LambdaQueryWrapper</code> 执行能力</li>
+  <li>feat: 新增 <code>Kotlin</code> 支持 <code>LambdaQueryWrapper</code> 执行能力</li>
+  <li>feat: 新增 <code>MybatisEnumTypeHandler</code> 枚举类型处理器支持缓存处理机制</li>
+  <li>feat: 新增 <code>ITableFieldMetaInfoCustomizer</code> 代码生成器扩展属性元数据处理能力</li>
+  <li>opt: 优化 <code>Sequence</code> 减少增加上下文切换</li>
+  <li>opt: 优化 <code>LambdaQueryWrapper.sqlSelect</code> 属性修改为 <code>protected</code></li>
+  <li>opt: 优化 <code>sql</code> 注入性能调整为函数方式拼接减少字符串<code>format</code>使用</li>
+  <li>opt: 优化 <code>Cursor</code> 游标查询一条记录能力</li>
+  <li>opt: 优化 <code>format</code> 部分修改为字符串组合</li>
+  <li>opt: 优化 <code>executeBatch</code> 根据执行影响行数返回确定结果布尔值</li>
+  <li>opt: 优化 <code>TableInfo</code> 扩展允许返回新的自定义实例对象</li>
+  <li>opt: 优化 <code>IJsonTypeHandler</code> 处理逻辑</li>
+</ul>
+
+        </div>
+        <a class="release-link" href="https://github.com/baomidou/mybatis-plus/releases/tag/v3.5.17" target="_blank" rel="noopener">查看完整发布说明 ↗</a>
+      </article>
+
+      <article class="release-card">
+        <div class="release-head">
+          <span class="release-tag">v3.5.16</span>
+          <span class="release-date">2026-01-11</span>
+        </div>
+        <div class="release-body">
+          <ul>
+  <li>fix: 修复<code>Jackson3TypeHandler</code>自定义<code>ObjectMapper</code>无效</li>
+  <li>fix: 处理代码生成器<code>PackageConfig</code>指定模块为空时拼接错误</li>
+  <li>fix: 修复配置加密无法在环境变量中使用</li>
+  <li>feat: 升级<code>SpringBoot3</code>至3.5.9</li>
+  <li>feat: 升级<code>JUnit</code>单元测试</li>
+  <li>feat: 升级<code>fastjson</code>至2.0.60</li>
+  <li>feat: 升级<code>jackson</code>至2.20.1</li>
+  <li>feat: 升级<code>gson</code>至2.13.2</li>
+  <li>feat: 升级<code>postgresql</code>至42.7.8</li>
+  <li>feat: 升级<code>h2database</code>至2.4.240</li>
+  <li>feat: 升级<code>mysql-connector-j</code>至9.5.0</li>
+  <li>feat: 升级<code>sqlite-jdbc</code>至3.51.1.0</li>
+  <li>feat: 升级<code>jaybird</code>至5.0.10.java8</li>
+  <li>feat: 升级<code>mybatis-spring</code>4.0.0</li>
+</ul>
+
+        </div>
+        <a class="release-link" href="https://github.com/baomidou/mybatis-plus/releases/tag/v3.5.16" target="_blank" rel="noopener">查看完整发布说明 ↗</a>
+      </article>
+
+      <article class="release-card">
+        <div class="release-head">
+          <span class="release-tag">v3.5.15</span>
+          <span class="release-date">2025-11-30</span>
+        </div>
+        <div class="release-body">
+          <ul>
+  <li>fix: 修复<code>Enjoy</code>模板生成xml错误</li>
+  <li>feat: 调整代码生成器元数据构建</li>
+  <li>feat: 优化<code>CrudRepository</code>批量执行前判断非事务中关闭连接</li>
+  <li>feat: 支持<code>SpringBoot</code>4.0.0</li>
+  <li>feat: 支持<code>Jackson</code>3.0</li>
+</ul>
+
+        </div>
+        <a class="release-link" href="https://github.com/baomidou/mybatis-plus/releases/tag/v3.5.15" target="_blank" rel="noopener">查看完整发布说明 ↗</a>
+      </article>
+
+      <article class="release-card">
+        <div class="release-head">
+          <span class="release-tag">v3.5.14</span>
+          <span class="release-date">2025-08-29</span>
+        </div>
+        <div class="release-body">
+          <ul>
+  <li>feat: 增加<code>bom</code>对<code>mybatis-plus-spring-boot4-starter</code>与<code>mybatis-plus-spring-boot4-starter-test</code>管理</li>
+</ul>
+
+        </div>
+        <a class="release-link" href="https://github.com/baomidou/mybatis-plus/releases/tag/v3.5.14" target="_blank" rel="noopener">查看完整发布说明 ↗</a>
+      </article>
+
+      <article class="release-card">
+        <div class="release-head">
+          <span class="release-tag">v3.5.13</span>
+          <span class="release-date">2025-08-28</span>
+        </div>
+        <div class="release-body">
+          <ul>
+  <li>fix: 修复在<code>Spring</code>中使用<code>@PostConstruct</code>调用<code>Db</code>方法查询出现警告日志</li>
+  <li>fix: 修复<code>Db</code>使用<code>count</code>返回<code>null</code>导致的空指针异常</li>
+  <li>fix: 修复<code>BaseMapper</code>在非<code>Spring</code>项目中报错</li>
+  <li>feat: 升级<code>Jsqlparser</code>5.2</li>
+  <li>feat: <code>OrderItem</code>增加<code>withExpression</code>根据表达式排序(注意:不支持序列化方式使用,自行控制<code>sql</code>注入)</li>
+  <li>feat: <code>OracleDdlGenerator</code>支持指定<code>schema</code>模式运行</li>
+  <li>feat: 适配华为云<code>GaussDb</code>数据库</li>
+  <li>feat: 雪花生成器初始化错误增加降级处理</li>
+  <li>feat: 新增<code>spring-boot4</code>支持</li>
+  <li>feat: 升级<code>gradle</code>8.13</li>
+  <li>opt: <code>SqlUtils</code>中<code>replaceSqlPlaceholder</code>方法增加缓存处理</li>
+  <li>opt：优化<code>DDL</code>执行记录表检查是否存在</li>
+  <li>opt: 容器环境下<code>workerId</code>获取优化</li>
+</ul>
+
+        </div>
+        <a class="release-link" href="https://github.com/baomidou/mybatis-plus/releases/tag/v3.5.13" target="_blank" rel="noopener">查看完整发布说明 ↗</a>
+      </article>
+
+      <article class="release-card">
+        <div class="release-head">
+          <span class="release-tag">v3.5.12</span>
+          <span class="release-date">2025-04-27</span>
+        </div>
+        <div class="release-body">
+          <ul>
+  <li>fix: 修复批量操作异步执行首次可能的出现<code>NoSuchElementException</code>错误</li>
+  <li>fix: 修复默认<code>SQL</code>解析线程池在<code>JVM</code>退出关闭导致的任务拒绝</li>
+  <li>fix: 修复<code>entity.java.btl</code>生成<code>toString</code>方法样式错误</li>
+  <li>fix: 修复<code>entity.java.ftl</code>模板类注释与导包缺少换行</li>
+  <li>opt: 重构<code>SqlRunner</code>执行<code>SQL</code>语句 (动态传参，不再根据参数值生成执行<code>SQL</code>)</li>
+  <li>opt: 增强<code>SqlRunner</code>执行(支持单参数使用<code>Map</code>({key}),<code>List</code>({index}),<code>JavaBean</code>({property})获取值)</li>
+  <li>opt: 改进<code>MybatisUtils</code>对自<code>SqlSessionFactory</code>的提取(支持自定义<code>SqlSessionTemplate</code>子类)</li>
+  <li>opt: 自动识别数据库支持<code>TDengine</code>数据库<code>websocket</code>连接</li>
+  <li>opt: 支持<code>Db</code>工具类对多数据源的支持</li>
+  <li>opt: 优化<code>MapperProxy</code>属性访问</li>
+  <li>opt: <code>CompatibleSet</code>接口增加<code>getBean</code>与<code>getProxyTargetObject</code>方法</li>
+  <li>opt: <code>CompatibleSet</code>与<code>CompatibleHelper</code>调整至<code>com.baomidou.mybatisplus.core.spi</code>包之中</li>
+  <li>opt: 支持手动指定<code>CompatibleSet</code>实现</li>
+  <li>opt: 代码生成器处理驱动返回索引信息<code>null</code></li>
+  <li>opt: 代码生成器处理<code>PRIMARY_KEY_</code>为开头的主键索引情况</li>
+  <li>opt: 去除<code>entity.kt.btl</code>模板<code>@Override</code>注解</li>
+  <li>opt: 解决<code>serviceImpl.java.ej</code>生成格式不统一</li>
+  <li>opt: 去除<code>mapper.java.ftl</code>多余的换行生成</li>
+  <li>opt: 去除<code>entity.kt.vm</code>,<code>entity.kt.ej</code>,<code>entity.kt.btl</code>导包结束分隔符</li>
+  <li>opt: 去除<code>controller.java.ej</code>,<code>controller.java.vm</code>多余的换行</li>
+  <li>opt: 去除<code>entity.kt.btl</code>生成属性多余的空格</li>
+  <li>opt: 统一<code>entity.java.btl</code>,<code>entity.java.ej</code>,<code>entity.java.ftl</code>,<code>entity.java.vm</code> 生成的<code>toString</code>方法样式</li>
+</ul>
+
+        </div>
+        <a class="release-link" href="https://github.com/baomidou/mybatis-plus/releases/tag/v3.5.12" target="_blank" rel="noopener">查看完整发布说明 ↗</a>
+      </article>
+
+      <article class="release-card">
+        <div class="release-head">
+          <span class="release-tag">v3.5.11</span>
+          <span class="release-date">2025-03-23</span>
+        </div>
+        <div class="release-body">
+          <ul>
+  <li>fix: 修复代码生成器链式模型非<code>lombok</code>下生成了<code>@Accessors</code>注解</li>
+  <li>fix: 修复主键使用<code>UUID</code>执行批量删除错</li>
+  <li>fix: 修复<code>Kotlin</code>使用<code>select(predicate)</code>方法错误</li>
+  <li>fix: 修复<code>AbstractCaffeineJsqlParseCache</code>异步产生的错误</li>
+  <li>fix: 修复动态SQL解析包含SQL注释(--或#)导致的合并错误 (动态脚本语句不再处理换行,如果需要去除换行请自行处理)</li>
+  <li>fix: 修复<code>DataChangeRecorderInnerInterceptor</code>数据比较出现强转异常</li>
+  <li>fix: 修复<code>IllegalSQLInnerInterceptor</code>拦截插件获取<code>catalog</code>与<code>schema</code>错误</li>
+  <li>fix: 修复动态表解析<code>create table if not exists</code> 获取表名错误</li>
+  <li>fix: 修复动态表解析<code>create [type] index</code> 获取表名错误</li>
+  <li>feat: 新增<code>DynamicTableNameJsqlParserInnerInterceptor</code> 基于<code>JsqlParser</code>动态表处理</li>
+  <li>feat: 支持<code>DdlScript</code>自定义脚本运行器参数</li>
+  <li>feat: 支持<code>DdlHelper</code>自定义脚本运行器参数</li>
+  <li>feat: 支持<code>DdlApplicationRunner</code>参数配置(脚本错误处理,自定义<code>ScriptRunner</code>,多处理器执行异常是否中断)</li>
+  <li>feat: 支持<code>BaseMultiTableInnerInterceptor</code>指定追加条件模式 (默认条件追加至末尾,仅作用于<code>select</code>,<code>delete</code>,<code>update</code>)</li>
+  <li>feat: 支持生成器<code>Entity</code>指定<code>serialVersionUID</code>添加<code>@Serial</code>注解</li>
+  <li>feat: 支持生成器<code>Entity</code>注解(字段,类注解)自定义处理</li>
+  <li>feat: 支持生成器<code>Entity</code>导包自定义处理</li>
+  <li>feat: 支持<code>崖山</code>数据库</li>
+  <li>feat: 支持<code>Hive2</code>分页</li>
+  <li>feat: 升级<code>Gradle</code>至8.10</li>
+  <li>feat: 支持<code>DdlHelper</code>执行自定义异常处理</li>
+  <li>opt: 调整<code>DynamicTableNameInnerInterceptor</code>表处理逻辑并保证<code>hook</code>运行</li>
+  <li>opt: 调整<code>DdlScript</code>类方法实现(分离DDL版本记录,优化执行方法)</li>
+  <li>opt: 调整<code>DbType#GAUSS</code>数据库名为<code>gauss</code></li>
+  <li>opt: 调整<code>JsqlParserGlobal</code>解析线程池指定</li>
+  <li>opt: 移除过时的<code>FieldStrategy.IGNORED</code></li>
+  <li>opt: 移除过时的<code>GlobalConfig.DbConfig#selectStrategy</code></li>
+  <li>opt: 移除过时的<code>MybatisSqlSessionFactoryBean#typeEnumsPackage</code></li>
+  <li>opt: 优化<code>DdlHelper</code>资源加载(不再依赖<code>Spring</code>或者其他实现)</li>
+  <li>opt: 去除<code>DdlHelper</code>中<code>getScriptRunner</code>方法指定的字符集编码</li>
+  <li>doc: 修正<code>DdlHelper</code>中注释错误</li>
+</ul>
+<p>由于<code>jsqlParser</code>5.0版本与5.1版本升级不兼容性不是很大，计划后期移除<code>mybatis-plus-jsqlparser-5.0</code>支持模块。</p>
+<p>多版本支持相对来说比较麻烦，后期只维护<code>mybatis-plus-jsqlparser-4.9</code> 与 <code>mybatis-plus-jsqlparser</code>(保持最新版跟进,直到再提升jdk)</p>
+
+        </div>
+        <a class="release-link" href="https://github.com/baomidou/mybatis-plus/releases/tag/v3.5.11" target="_blank" rel="noopener">查看完整发布说明 ↗</a>
+      </article>
+
+      <article class="release-card">
+        <div class="release-head">
+          <span class="release-tag">v3.5.10.1</span>
+          <span class="release-date">2025-01-13</span>
+        </div>
+        <div class="release-body">
+          <ul>
+  <li>fix: 修复动态节点处理错误</li>
+</ul>
+
+        </div>
+        <a class="release-link" href="https://github.com/baomidou/mybatis-plus/releases/tag/v3.5.10.1" target="_blank" rel="noopener">查看完整发布说明 ↗</a>
+      </article>
+
+      <article class="release-card">
+        <div class="release-head">
+          <span class="release-tag">v3.5.10</span>
+          <span class="release-date">2025-01-12</span>
+        </div>
+        <div class="release-body">
+          <ul>
+  <li>fix: 修复字段有<code>TableField</code>注解但未指定<code>value</code>值下全局<code>columnFormat</code>未生效问题</li>
+  <li>fix: 修复enjoy模板生成kotlin代码报错</li>
+  <li>fix: 修复enjoy模板生成字符串代码报错</li>
+  <li>fix: 修复springdoc生成注解未转义双引号</li>
+  <li>fix: 修复数据变动插件更新无主键报错</li>
+  <li>fix: 修复多表解析processJoins解析表出现越界</li>
+  <li>feat: TableName注解新增<code>properties</code>属性</li>
+  <li>feat: 支持@InterceptorIgnore注解在default方法上</li>
+  <li>feat: 适配jsqlparser5.1版本(5.0兼容版本请使用<code>mybatis-plus-jsqlparser-5.0</code>)</li>
+  <li>feat: 提供<code>InterceptorIgnoreHelper.execute</code>模板执行方法处理插件跳过策略(防止手动使用handle方法出现未清理线程资源造成的错误)</li>
+  <li>feat: 代码生成器全局package配置属性支持自定义模板信息获取</li>
+  <li>feat: 代码生成器新增表索引信息获取</li>
+  <li>feat: 代码生成器提供<code>Mapper.Builder.generateMapperMethodHandler</code>处理器基于索引生成索引方法</li>
+  <li>feat: 代码生成器Entity支持自定义Class注解和字段注解生成</li>
+  <li>feat: 代码生成器Entity支持lombok模式指定生成类注解</li>
+  <li>feat: 代码生成器Entity支持ToString<code>(Entity.Builder.toString(boolean))</code>方法控制生成 (默认生成,lombok模式下将会生成<code>@ToString</code>,低版本下lombok不生成,属于不兼容改动)</li>
+  <li>feat: 代码生成器Entity支持字段文档注释(<code>Entity.Builder.fieldUseJavaDoc(boolean)</code>)控制生成 (默认生成,低版本下,使用swagger或springdoc不会生成字段文档注释,属于不兼容改动)</li>
+  <li>feat: 重写动态语句生成(生成执行SQL将不再包含\n换行符)</li>
+  <li>feat: 安全加密处理器密钥获取支持环境变量与系统属性传入</li>
+  <li>feat: 升级mybatis至3.5.19</li>
+  <li>feat: 升级springboot至3.4.1</li>
+  <li>feat: 升级kotlin至2.1.0</li>
+  <li>实用性低,检查语法不完善,计划移除IllegalSQLInnerInterceptor插件</li>
+  <li>功能缺陷较多,计划移除DataChangeRecorderInnerInterceptor插件</li>
+</ul>
+
+        </div>
+        <a class="release-link" href="https://github.com/baomidou/mybatis-plus/releases/tag/v3.5.10" target="_blank" rel="noopener">查看完整发布说明 ↗</a>
+      </article>
+
+      <article class="release-card">
+        <div class="release-head">
+          <span class="release-tag">v3.5.9</span>
+          <span class="release-date">2024-10-23</span>
+        </div>
+        <div class="release-body">
+          <ul>
+  <li>opt: 优化代码生成器支持可视化配置生成能力</li>
+  <li>opt: 解耦扩展包不再强制依赖 spring 开发框架</li>
+  <li>opt: 拆分jsqlparser支持模块,提供mybatis-plus-jsqlparser(支持最新jsqlparser)与mybatis-plus-jsqlparser-4.9模块, 默认不携带,升级后需要自行引入.</li>
+  <li>feat: 重构 service 模块抽象为 CrudRepository 不再建议使用 IService 避免业务层数据混乱</li>
+  <li>feat: 新增 solon 启动插件支持</li>
+  <li>feat: 升级SpringBoot3.3.4</li>
+  <li>feat: 升级velocity2.4</li>
+</ul>
+
+        </div>
+        <a class="release-link" href="https://github.com/baomidou/mybatis-plus/releases/tag/v3.5.9" target="_blank" rel="noopener">查看完整发布说明 ↗</a>
+      </article>
+
+      <article class="release-card">
+        <div class="release-head">
+          <span class="release-tag">v3.5.8</span>
+          <span class="release-date">2024-09-18</span>
+        </div>
+        <div class="release-body">
+          <ul>
+  <li>fix: 解决optimizeJoinOfCountSql反序列化不支持问题</li>
+  <li>fix: 解决Db工具类批量操作使用rewriteBatchedStatements=true返回值不准确</li>
+  <li>fix: 修复逻辑删除填充与乐观锁冲突</li>
+  <li>fix: 修复IllegalSQLInnerInterceptor分析嵌套count语句错误</li>
+  <li>fix: 升级jsqlParser5.0 解决 for update 语句错误</li>
+  <li>fix: 修复处自增自减负数情况导致jsqlParser解析优化错误</li>
+  <li>fix: 修复removeMapper缓存清理不完全</li>
+  <li>fix: 修复SqlServerQuery查询表注释乱码</li>
+  <li>opt: 完善函数注入校验逻辑</li>
+  <li>opt: Page属性访问调整为private,重写toString方法</li>
+  <li>opt: 主键生成策略(uuid)不支持的类型打印警告日志</li>
+  <li>opt: MybatisPlusException转化为PersistenceException子类</li>
+  <li>feat: 增加deleteByIds空集合处理</li>
+  <li>feat: 重命名selectBatchIds方法为selectByIds</li>
+  <li>feat: 支持tableName与schema属性占位符配</li>
+  <li>feat: 代码生成器增加对虚拟列的属性获取</li>
+  <li>feat: chain wrapper to lambda chain wrapper #6314</li>
+  <li>feat: 代码生成器增加手动指定数据库驱动兼容不能自动注册的驱动实现</li>
+  <li>feat: 升级kotlin2.0.0</li>
+  <li>feat: 升级SpringBoot3.3.2</li>
+  <li>feat: 升级fastjson2.0.52</li>
+  <li>feat: 升级mybatis-spring3.0.4</li>
+  <li>feat: 升级spring-cloud-commons4.1.4</li>
+  <li>feat: 部分支持依赖升级更新</li>
+  <li>feat: 支持GoldenDB数据库</li>
+  <li>feat: 支持Duckdb数据库</li>
+  <li>feat: 支持Derby数据库</li>
+  <li>feat: 支持Vastbase数据库</li>
+</ul>
+
+        </div>
+        <a class="release-link" href="https://github.com/baomidou/mybatis-plus/releases/tag/v3.5.8" target="_blank" rel="noopener">查看完整发布说明 ↗</a>
+      </article>
+
+      <article class="release-card">
+        <div class="release-head">
+          <span class="release-tag">v3.5.7</span>
+          <span class="release-date">2024-06-10</span>
+        </div>
+        <div class="release-body">
+          <ul>
+  <li>fix: 修复动态表名处理 update ignore 错误</li>
+  <li>fix: 修复SQLServer2005分页处理空格错误</li>
+  <li>fix: 修复多租户查询出现问题</li>
+  <li>fix: 修正非通用泛型情况下序列化json减少强转</li>
+  <li>fix: 修复代码生成器禁用模板失效</li>
+  <li>fix: 修复分页count优化distinct搭配orderBy处理错误</li>
+  <li>fix: 修复达梦数据库生成代码错误</li>
+  <li>fix: 修复租户插件特殊exists语句会失效</li>
+  <li>fix: 修复sqlite数据库ddl_history错误导致无法创建表</li>
+  <li>fix: 修复DataChangeRecorderInnerInterceptor在Insert时配置忽略无效</li>
+  <li>fix: 修复代码生成器处理不标准的JdbcType导致空指针错误</li>
+  <li>feat: BaseMapper新增批量操作与InsertOrUpdate方法</li>
+  <li>feat: BaseMapper新增批量操作方法返回值List<BatchResult></li>
+  <li>feat: BaseMapper方法逻辑删除默认支持填充</li>
+  <li>feat: 调整Service层逻辑删除填充逻辑处理</li>
+  <li>feat: 重构批量删除参数填充处理逻辑.</li>
+  <li>feat: 自增自减处理BigDecimal</li>
+  <li>feat: 新增雪花ID配置（支持手动分配workerId与datacenterId或指定网卡信息自动获取方式）</li>
+  <li>feat: 重构ServiceImpl泛型参数提取</li>
+  <li>feat: 修改AES密钥随机性生成</li>
+  <li>feat: UpdateWrapper增加checkSqlInjection方法</li>
+  <li>feat: 调整DDL脚本自动装配逻辑(当无实现时或无mybatis-plus-extension模块时不注入DDL运行bean)</li>
+  <li>feat: 注入方法deleteBatchIds重命名deleteByIds</li>
+  <li>feat: SpringBoot升级至2.7.18和3.2.6</li>
+  <li>feat: 升级kotlin至1.9.24</li>
+  <li>feat: 升级lombok至1.18.32</li>
+</ul>
+
+        </div>
+        <a class="release-link" href="https://github.com/baomidou/mybatis-plus/releases/tag/v3.5.7" target="_blank" rel="noopener">查看完整发布说明 ↗</a>
+      </article>
+
+      <article class="release-card">
+        <div class="release-head">
+          <span class="release-tag">v3.5.6</span>
+          <span class="release-date">2024-04-08</span>
+        </div>
+        <div class="release-body">
+          <ul>
+  <li>fix: 修复通用Service多层代理引发的错误</li>
+  <li>fix: 修复Json类型处理器反序列化泛型丢失原始类型</li>
+  <li>fix: 修复填充器处理器基本类型数组出现强制错误</li>
+  <li>fix: 修复上版本移除掉Page方法保留至PageDto类之中</li>
+  <li>fix: 修复IllegalSQLInnerInterceptor未处理Parenthesis</li>
+  <li>fix: 修复IllegalSQLInnerInterceptor表名或字段名包裹导致无法获取索引信息和索引字段校验问题</li>
+  <li>fix: 修复KtUpdateChainWrapper调用setSql的时候params没有展开</li>
+  <li>fix: 修复useGeneratedShortKey配置失效</li>
+  <li>fix: 修复DataChangeRecorderInnerInterceptor一系列问题</li>
+  <li>feat: 去除sqlFirst与sqlComment转义(如有需要转义操作,请手动调用转义后传入)</li>
+  <li>feat: ServiceImpl修改为抽象类,防止错误直接实例化</li>
+  <li>feat: 重构代码生成器TemplateConfig配置,模板禁用与路径配置更改至对应具体实现之上</li>
+  <li>feat: 支持组合注解</li>
+  <li>feat: 新增 LambdaUpdateWrapper 字段自增 setIncrBy 自减 setDecrBy 方法</li>
+  <li>feat: 获取注入方法时传递org.apache.ibatis.session.Configuration</li>
+  <li>feat: 新增自增主键兼容配置开关(mybatis-plus.global-config.db-config.insert-ignore-auto-increment-column 默认false,开启INSERT语句无视主键字段生成)</li>
+  <li>feat: 新增参数填充器跳过方式(基于MappedStatement#id)</li>
+  <li>feat: 新增SQLite的DDL自动维护功</li>
+  <li>feat: 新增eqSql方法</li>
+  <li>feat: 新增SQL解析线程池</li>
+  <li>feat: 增加雪花ID生成器初始化日志打印(默认超过5秒打印警告日志)</li>
+  <li>feat: 升级mybatis至3.5.16</li>
+  <li>feat: 升级spring-cloud-commons</li>
+  <li>feat: 升级jsqlparser至4.9</li>
+  <li>test: Github增加CI</li>
+  <li>doc: 增加update(Wrapper)相关api无法自动填充注释</li>
+</ul>
+
+        </div>
+        <a class="release-link" href="https://github.com/baomidou/mybatis-plus/releases/tag/v3.5.6" target="_blank" rel="noopener">查看完整发布说明 ↗</a>
+      </article>
+
+      <article class="release-card">
+        <div class="release-head">
+          <span class="release-tag">v3.5.5</span>
+          <span class="release-date">2023-12-24</span>
+        </div>
+        <div class="release-body">
+          <ul>
+  <li>fix: 修复配置databaseId失效</li>
+  <li>fix: 修复自增主键忽略注入错误忽略非自增主键注入问题</li>
+  <li>fix: 修复ChainWrapper模式下GroupBy生成多的逗</li>
+  <li>fix: 修复selectOne缓存问题</li>
+  <li>fix: 修复数据权限多表支持在某些场景下失效问题</li>
+  <li>fix: 修复生成器mysql类型转换器point转换错误</li>
+  <li>fix: 修复kotlin下无法使用父类属性操作</li>
+  <li>fix: 修复自动注入DdlApplicationRunner返回null导致的高版本springboot启动错误</li>
+  <li>fix: 修复生成器代码提示的RuntimeUtils安全性漏洞问题</li>
+  <li>feat: 新增fastjson2支持</li>
+  <li>feat: 升级gradle-wrapper至8.4</li>
+  <li>feat: 升级kotlin-gradle-plugin至1.9.21</li>
+  <li>feat: 升级mybatis至3.5.15</li>
+  <li>feat: 升级lombok至1.18.30</li>
+  <li>feat: 升级spring-boot3至3.2.0</li>
+  <li>feat: 升级spring-boot2版本mybatis-spring至2.1.2</li>
+  <li>feat: 升级spring-boot3版本mybatis-spring至3.0.3</li>
+  <li>feat: 移除通用service中saveOrUpdate的事务</li>
+  <li>feat: 支持Trino,Presto,GBase8s-pg,SUNDB数据库</li>
+</ul>
+
+        </div>
+        <a class="release-link" href="https://github.com/baomidou/mybatis-plus/releases/tag/v3.5.5" target="_blank" rel="noopener">查看完整发布说明 ↗</a>
+      </article>
+
+      <article class="release-card">
+        <div class="release-head">
+          <span class="release-tag">v3.5.4.1</span>
+          <span class="release-date">2023-11-03</span>
+        </div>
+        <div class="release-body">
+          <ul>
+  <li>fix: 修复Aop增强Mapper层导致的转换错误.</li>
+</ul>
+
+        </div>
+        <a class="release-link" href="https://github.com/baomidou/mybatis-plus/releases/tag/v3.5.4.1" target="_blank" rel="noopener">查看完整发布说明 ↗</a>
+      </article>
+
+      <article class="release-card">
+        <div class="release-head">
+          <span class="release-tag">v3.5.4</span>
+          <span class="release-date">2023-10-24</span>
+        </div>
+        <div class="release-body">
+          <ul>
+  <li>fix: 修复Insert无字段时执行SQL报错.</li>
+  <li>fix: 修复高版本JDK下lambda无法执行IDEA调试.</li>
+  <li>fix: 修复LambdaQuery中select,groupBy,orderBy,orderByAsc,orderByDesc提示的警告,新增对应doXxx方法支持重写(不兼容改动,api方法做了final处理).</li>
+  <li>fix: 修复inject-sql-session-on-mapper-scan无配置提示.</li>
+  <li>fix: 修复<code>@OrderBy</code>搭配@TableId排序字段错误(不兼容改动,com.baomidou.mybatisplus.core.metadata.TableInfo.orderByFields调整了类型).</li>
+  <li>fix: 修复Service中根据主键逻辑删除时类型不匹配导致的错误.</li>
+  <li>fix: 修复分页插件Count与自定义ResultHandler冲突.</li>
+  <li>fix: 修复字段填充处理器可能会出现重入问题</li>
+  <li>feat: 新增自增主键字段是否允许插入控制,可使用方法注入覆盖Insert(boolean ignoreAutoIncrementColumn)或Insert(String name, boolean ignoreAutoIncrementColumn)控制自增主键是否支持写入行为.</li>
+  <li>feat: ActiveRecord模式下deleteById(逻辑删除)方法支持自动填充功能.</li>
+  <li>feat: 内置泛型提取,支持非Spring体系项目使用.</li>
+  <li>feat: BaseMapper新增update(wrapper)更新方法.</li>
+  <li>feat: BaseMapper新增流式查询方法对大数据查询支持.</li>
+  <li>feat: 代码生成器元数据信息公开tableName与columnName字段访问.</li>
+  <li>feat: 新增mybatis-plus-spring-boot3-starter与mybatis-plus-spring-boot3-starter-test支持SpringBoot3.</li>
+  <li>feat: 支持插件缺省注入,当无MybatisPlusInterceptor注入时,支持com.baomidou.mybatisplus.extension.plugins.inner.InnerInterceptor自动注入.</li>
+  <li>feat: 升级源码Jdk开发版本至Java21.</li>
+  <li>feat: 升级gradle-wrapper至8.4-rc-1.</li>
+  <li>feat: 升级kotlin-gradle-plugin至1.9.20-Beta.</li>
+  <li>feat: 升级SpringBoot2.x版本至2.7.15.</li>
+  <li>feat: 升级lombok至1.18.30.</li>
+  <li>opt: mybatis-plus-extension中mybatis-spring依赖修改为可选依赖(不兼容改动,如果项目在非spring或非springBoot下使用到了请手动添加依赖).</li>
+  <li>opt: spring-boot-starter减少无用的配置提示(不兼容改动,调整了com.baomidou.mybatisplus.autoconfigure.MybatisPlusProperties.configuration类型).</li>
+  <li>opt: 字段填充处理器提取去除固定参数提取,支持更宽松的mapper方法参数提取填充处理,</li>
+  <li>opt: 去除com.baomidou.mybatisplus.core.toolkit.ReflectionKit.setAccessible方法调用,防止高版本Jdk移除</li>
+  <li>opt: 调整selectOne方法(配合流式处理,最多提取两行数据,日志不再打印总记录数).</li>
+  <li>opt: 优化selectObjs方法返回值,减少类型强制转换.</li>
+  <li>opt: 通用Service支持多SqlSessionFactory注入.</li>
+  <li>opt: 优化TableInfo.newInstance创建实例方法.</li>
+  <li>opt: 去除多余的<code>@SuppressWarnings("serial")</code></li>
+</ul>
+
+        </div>
+        <a class="release-link" href="https://github.com/baomidou/mybatis-plus/releases/tag/v3.5.4" target="_blank" rel="noopener">查看完整发布说明 ↗</a>
+      </article>
+
+      <article class="release-card">
+        <div class="release-head">
+          <span class="release-tag">v3.5.3.2</span>
+          <span class="release-date">2023-08-09</span>
+        </div>
+        <div class="release-body">
+          <p>feat: 升级mybatis至3.5.13,mybatis-spring至2.1.1</p>
+<p>feat: jsqlparser提供统一解析类,可配置解析函数,并加入缓存选项</p>
+<p>feat: 增加Sequence初始化debug日志</p>
+<p>feat: 参数填充器支持多参数填充</p>
+<p>feat: BaseMapper新增selectMaps(page, wrapper)与selectList(page, wrapper)方法</p>
+<p>feat: 乐观锁字段支持 java.time.Instant</p>
+<p>feat: wrapper#apply支持配置mapping比如column={0,javaType=int,jdbcType=NUMERIC,typeHandler=xxx.xxx.MyTypeHandler}</p>
+<p>feat: 调整 QueryWrapper 需要主动开启检查 SQL 注入过滤（移除掉wrapper的orderby的sql过滤功能）</p>
+<p>feat: 新增星瑞格数据库支持</p>
+<p>feat: updateWrapper#setSql方法支持动态入参参考wrapper#apply方法</p>
+<p>feat: 自动 SQL 维护 DDL 支持 SQL 执行存储过程</p>
+<p>perf: ktWrapper加强泛型限制</p>
+<p>fix: 修复在选择springdoc文档注释时entity描述异常</p>
+<p>fix: 在主键的IdType为AUTO的情况下,Table#getAllInsertSqlColumnMaybeIf("xx.")所生成sql错误问题</p>
+<p>fix: 租户插件支持update set subSelect的情况</p>
+<p>fix: 修复高版本Jdk提示非法反射警告(Illegal reflective access by com.baomidou.mybatisplus.core.toolkit.SetAccessibleAction)</p>
+<p>fix: 修复高版本Jdk插件动态代理反射错误 (Unable to make field protected java.lang.reflect.InvocationHandler java.lang.reflect.Proxy.h accessible)</p>
+<p>fix: 修复路径替换将原有的“.”替换成了文件分隔符“/”</p>
+<p>fix: 修复Beetl模板引擎无法生成注释</p>
+<p>fix: 修复Types.DOUBLE类型无法映射</p>
+<p>fix: 修复转换父类公共字段报错</p>
+<p>fix: 修复生成器无法通过cfg.取值</p>
+<p>fix: 修复单元测试下MockBean时事务回滚失败</p>
+<p>fix: 修复Warpper类nonEmptyOfWhere方法命名不规范,导致Ognl未正确缓存带来的执行开销</p>
+<p>fix: ClickHouseQuery类的tableComment()方法返回表注释字段为comment</p>
+<p>fix: 修复在选择springdoc文档注释时entity描述异常问题</p>
+<p>fix: Table#getAllInsertSqlColumnMaybeIf("xx.")下的sql生成错误问题</p>
+<p>fix: Db类增加根据实体不为空的字段条件查询方法重载</p>
+<p>fix: 生成器对于Kotlin的Entity文件的superEntityClass的错误</p>
+<p>fix: 修复springdoc freemarker模式下 表注释取值取不到</p>
+<p>opt: 增强参数填充处理器,防止因参数名称与填充名称一致类型不匹配导致转换错误</p>
+<p>opt: 优化方法注入,去除SelectPage,SelectMapsPage,SelectByMap,DeleteByMap注入</p>
+<p>opt: 减少MappedStatement堆内存占用</p>
+<p>opt: 解决PluginUtils重复获取元数据带来的性能消耗</p>
+<p>opt: 注入方法去除多余的换行符</p>
+<p>opt: 去除SqlRunner持有的sqlSessionFactory变量</p>
+<p>opt: 解决Sequence初始化多次问题(自定义情况下可不创建默认主键生成器)</p>
+<p>opt: 优化 SqlHelper#getMapper 返回泛型</p>
+<p>opt: 去除SqlRunner持有的sqlSessionFactory变量</p>
+<p>docs: 修正DdlHelper注释错误</p>
+
+        </div>
+        <a class="release-link" href="https://github.com/baomidou/mybatis-plus/releases/tag/v3.5.3.2" target="_blank" rel="noopener">查看完整发布说明 ↗</a>
+      </article>
+
+      <article class="release-card">
+        <div class="release-head">
+          <span class="release-tag">v3.5.3.1</span>
+          <span class="release-date">2023-01-06</span>
+        </div>
+        <div class="release-body">
+          <p> 紧急修改 lambdaQuery()...One() 实体不存在导致的 BUG</p>
+
+        </div>
+        <a class="release-link" href="https://github.com/baomidou/mybatis-plus/releases/tag/v3.5.3.1" target="_blank" rel="noopener">查看完整发布说明 ↗</a>
+      </article>
+
+      <article class="release-card">
+        <div class="release-head">
+          <span class="release-tag">v3.5.3</span>
+          <span class="release-date">2022-12-28</span>
+        </div>
+        <div class="release-body">
+          <p>多租户插件:多表join表名必需起别名,否则追加的过滤条件不带前缀</p>
+<p>InterceptorIgnore 不能过滤 selectKey 的问题</p>
+<p>分页新增informix数据库支持</p>
+<p>分页新增优炫数据库支持</p>
+<p>分页新增TDengine数据库支持</p>
+<p>分页新增亚马逊redshift数据库支持</p>
+<p>支持spring-boot 2.7以上版本</p>
+<p>雪花id新增反解时间戳方法Sequence#parseIdTimestamp</p>
+<p>BaseMapper.selectCount生成语句加入中AS total</p>
+<p>修复IllegalSQLInnerInterceptor类ClassCastException异常，并优化日志</p>
+<p>移除注解OrderBy的过时属性isDesc</p>
+<p>移除TableInfo过时方法</p>
+<p>加入JoinTableInfoInitHandler类参与TableInfo初始化</p>
+<p>修复StringUtils.sqlInjectionReplaceBlank方法过滤sql不全，可能会导致sql注入的情况</p>
+<p>增加IService.lambdaQuery(entity)支持，写法更便捷</p>
+<p>新增数据变更记录（数据审计）插件DataChangeRecorderInnerInterceptor</p>
+<p>新增查询条件方法 notLikeLeft 和 notLikeRight</p>
+<p>数据权限多表解析部分处理优化</p>
+<p>允许子类重写 orderBy 基础方法 gitee issues/I61F51</p>
+<p>新增Db类，调整 SimpleQuery 类</p>
+<p>新增脚本自动维护功能</p>
+<p>新增支持手动拦截器忽略策略，例如 InterceptorIgnoreHelper.handle(IgnoreStrategy.builder().tenantLine(true).build());</p>
+<p>支持 PG 数据字段大写 ID 自增 fixed issues/I4T0YJ</p>
+<p>代码生成器重构完成，合并回 MP 核心代码库</p>
+<p>代码生成器增加是否生成service接口的开关</p>
+
+        </div>
+        <a class="release-link" href="https://github.com/baomidou/mybatis-plus/releases/tag/v3.5.3" target="_blank" rel="noopener">查看完整发布说明 ↗</a>
+      </article>
+
+      <article class="release-card">
+        <div class="release-head">
+          <span class="release-tag">v3.5.1</span>
+          <span class="release-date">2022-02-25</span>
+        </div>
+        <div class="release-body">
+          <p>新增 impala 数据库支~~持</p>
+<p>缓存动态获取数据库类型~~</p>
+<p>新增可控分配 id 方法 fixed github pull/4231</p>
+<p>延迟枚举扫描注册</p>
+<p>乐观锁插件支持根据wrapper填充 github pull/3664</p>
+<p>H2KeyGenerator 语法修改</p>
+<p>SimpleQuery 优化及Bug修改</p>
+<p>fixed gitee issues/I4P9EN</p>
+<p>SybaseDialect 关键词替换优化</p>
+
+        </div>
+        <a class="release-link" href="https://github.com/baomidou/mybatis-plus/releases/tag/v3.5.1" target="_blank" rel="noopener">查看完整发布说明 ↗</a>
+      </article>
+  </main>
+
+  <footer class="footer">
+    Powered by <a href="https://llmstxt.org/" target="_blank">llms.txt 协议</a>
+    · 由 <a href="https://github.com/BaixuanZhu" target="_blank">BaixuanZhu</a> 维护
+    · 数据来自 <a href="https://github.com/baomidou/mybatis-plus" target="_blank">baomidou/mybatis-plus Releases</a>
+  </footer>
+</body>
+</html>

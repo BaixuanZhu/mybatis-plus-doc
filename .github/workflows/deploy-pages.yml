@@ -46,6 +46,9 @@ jobs:
       - name: Generate docs (crawl baomidou.com)
         run: node llm-wiki/scripts/generate-llms.js
 
+      - name: Generate releases page (sync GitHub Releases)
+        run: node llm-wiki/scripts/fetch-releases.js
+
       - name: Build site
         run: |
           mkdir -p _site
