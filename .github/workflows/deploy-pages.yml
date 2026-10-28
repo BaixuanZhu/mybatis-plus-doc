@@ -65,9 +65,9 @@ jobs:
         id: deployment
         uses: actions/deploy-pages@v5
 
-      # 回写生成物并在长期无提交时保活，避免 60 天无活动导致 schedule 被禁用
-      - name: Commit generated files / keepalive
-        if: github.event_name == 'schedule' || github.event_name == 'workflow_dispatch'
+      # 回写生成物，避免每天的爬取结果只存在于 runner 里
+      - name: Commit generated files
+        if: success() && (github.event_name == 'schedule' || github.event_name == 'workflow_dispatch')
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
@@ -89,13 +89,20 @@ jobs:
             git add llm-wiki/llms-full.txt llm-wiki/releases.html llm-wiki/index.html
             git commit -m "chore(site): 自动同步文档与 Releases [skip ci]"
             push_or_rebase
-            exit 0
           fi
+
+      # 上次提交超过 45 天就补一次空提交：仓库 60 天无活动会被 GitHub 禁用 schedule。
+      # 用 always() 保证爬取/部署失败时也会执行，否则连续失败同样会触发禁用。
+      - name: Keepalive
+        if: always() && (github.event_name == 'schedule' || github.event_name == 'workflow_dispatch')
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
 
           last_commit=$(git log -1 --format=%ct)
           if [ $(( $(date +%s) - last_commit )) -gt $((45 * 86400)) ]; then
             date -u +"%Y-%m-%dT%H:%M:%SZ" > llm-wiki/.keepalive
             git add llm-wiki/.keepalive
             git commit -m "chore(site): keepalive [skip ci]"
-            push_or_rebase
+            git push || { git pull --rebase --autostash; git push; }
           fi
