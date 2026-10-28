@@ -15,7 +15,7 @@ on:
 
 jobs:
   build-and-deploy:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     permissions:
       contents: write
       pages: write
@@ -29,14 +29,14 @@ jobs:
 
     steps:
       - name: Checkout
-        uses: actions/checkout@v5
+        uses: actions/checkout@v7
         with:
           sparse-checkout: |
             .github
             llm-wiki
 
       - name: Setup Node.js
-        uses: actions/setup-node@v5
+        uses: actions/setup-node@v7
         with:
           node-version: '24'
 
@@ -72,6 +72,13 @@ jobs:
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
 
+          # 期间若有他人提交，先变基再重推
+          push_or_rebase() {
+            git push && return 0
+            git pull --rebase --autostash
+            git push
+          }
+
           # 同步时间戳每天都会变，忽略它以免产生无意义提交
           if [ -n "$(git status --porcelain llm-wiki/releases.html)" ] \
             && git diff --quiet -I 'class="synced"' -- llm-wiki/releases.html; then
@@ -81,7 +88,7 @@ jobs:
           if [ -n "$(git status --porcelain llm-wiki/llms-full.txt llm-wiki/releases.html llm-wiki/index.html)" ]; then
             git add llm-wiki/llms-full.txt llm-wiki/releases.html llm-wiki/index.html
             git commit -m "chore(site): 自动同步文档与 Releases [skip ci]"
-            git push
+            push_or_rebase
             exit 0
           fi
 
@@ -90,5 +97,5 @@ jobs:
             date -u +"%Y-%m-%dT%H:%M:%SZ" > llm-wiki/.keepalive
             git add llm-wiki/.keepalive
             git commit -m "chore(site): keepalive [skip ci]"
-            git push
+            push_or_rebase
           fi
