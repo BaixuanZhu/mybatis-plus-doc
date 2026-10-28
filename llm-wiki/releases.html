@@ -125,12 +125,76 @@
       返回 LLM Wiki 首页
     </a>
 
-    <p class="synced">最近同步：2026-08-20 11:33 UTC</p>
+    <p class="synced">最近同步：2026-10-28 07:28 UTC</p>
 
     
       <article class="release-card">
         <div class="release-head">
-          <span class="release-tag">v3.5.17</span><span class="release-badge">最新</span>
+          <span class="release-tag">v3.5.18.1</span><span class="release-badge">最新</span>
+          <span class="release-date">2026-10-27</span>
+        </div>
+        <div class="release-body">
+          <ul>
+  <li>fix: isolate starter configurations and adapt Spring Boot 4</li>
+  <li>fix: correct test convention source scanning</li>
+  <li>fix: 修复全表操作拦截器 OR 条件空指针 (#7195)</li>
+  <li>opt: check formatting before build</li>
+  <li>opt: 优化格式化多数据源相关代码</li>
+</ul>
+
+        </div>
+        <a class="release-link" href="https://github.com/baomidou/mybatis-plus/releases/tag/v3.5.18.1" target="_blank" rel="noopener">查看完整发布说明 ↗</a>
+      </article>
+
+      <article class="release-card">
+        <div class="release-head">
+          <span class="release-tag">v3.5.18</span>
+          <span class="release-date">2026-10-25</span>
+        </div>
+        <div class="release-body">
+          <ul>
+  <li>fix: 安全修复 <code>BlockAttackInnerInterceptor</code> 常量恒等式（如 <code>1 XOR 0</code>、<code>1 <= 1</code>、<code>NOT 1 = 2</code>、<code>WHERE 1</code>）绕过全表更新/删除校验问题</li>
+  <li>fix: 安全修复 <code>TenantLineInnerInterceptor</code>、<code>DataPermissionInterceptor</code> 向 <code>XOR</code> 条件追加租户/权限条件时缺少括号，导致数据越权读写问题</li>
+  <li>fix: core restore Implementation-Version in JAR manifests</li>
+  <li>fix: keep BaseMapper.selectOne independent of JDBC cursor support</li>
+  <li>fix: 修复同一 JVM 内机器标识相同的多个默认主键生成器生成重复 ID</li>
+  <li>fix: avoid O(N^2) DEBUG log output in parserMulti</li>
+  <li>fix: generator recognize PostgreSQL partitioned tables</li>
+  <li>fix: 补齐 notIn 参数映射并增加 Lambda Wrapper 自动映射开关</li>
+  <li>fix: 补齐 Fury 类和枚举注册并增加完整性与序列化测试</li>
+  <li>fix: 恢复 JAR 清单信息及 LICENSE 和 Maven POM</li>
+  <li>fix: 移除 LIKE 条件的字段参数映射</li>
+  <li>fix: selectOne 使用 ResultHandler 在映出第二行后停止映射</li>
+  <li>feat: 新增多数据源插件</li>
+  <li>feat: 新增 mybatis-plus-up 模块及相关测试用例</li>
+  <li>feat: 新增支持配置加密在环境变量中使用</li>
+  <li>feat: Merge pull request #7182 from jianjindream/fix/postgresql-partitioned-table</li>
+  <li>feat: Merge pull request #7172 from jjj-n/codex/chain-query-one-throw-ex</li>
+  <li>feat: Merge pull request #7180 from zh-hanlabs/fix/jsqlparser-multi-debug-log</li>
+  <li>feat: Merge pull request #7178 from hebulin/fix/7135-duplicate-id-shared-sequence</li>
+  <li>feat: Merge pull request #7166 from smf-h/codex/fix-selectone-cursor-compatibility</li>
+  <li>feat: Merge pull request #7184 from zhanghien/feature/polardb-oracle</li>
+  <li>feat: Merge pull request #7186 from Lyin-OTTF/fix/7177-selectone-early-stop</li>
+  <li>feat: Merge pull request #7164 from arimu1/fix/7150-implementation-version-manife</li>
+  <li>feat: add ChainQuery.one(boolean throwEx)</li>
+  <li>opt: 应用 Spotless 格式化，统一导入顺序并清理无用导入</li>
+  <li>opt: 升级 Gradle Wrapper 至 9.6.0 并接入 Spotless 与 git 钩子</li>
+  <li>opt: 保留 JSqlParser 5.2 模块并升级默认模块至 5.4</li>
+  <li>opt: 忽略 VS Code/Zed 目录并注释本地签名配置</li>
+  <li>opt: 引入上游源码副本、差异补丁及发布校验</li>
+  <li>opt: 使用 Eclipse 120 列规则并统一源码格式</li>
+  <li>opt: 完善格式规则并同步上游源码与补丁格式</li>
+  <li>opt: 按 Boot 版本拆分测试支持并完善上游源码维护</li>
+  <li>opt: 调整 PolarDB 数据库说明与生成器识别</li>
+</ul>
+
+        </div>
+        <a class="release-link" href="https://github.com/baomidou/mybatis-plus/releases/tag/v3.5.18" target="_blank" rel="noopener">查看完整发布说明 ↗</a>
+      </article>
+
+      <article class="release-card">
+        <div class="release-head">
+          <span class="release-tag">v3.5.17</span>
           <span class="release-date">2026-07-08</span>
         </div>
         <div class="release-body">
@@ -670,62 +734,6 @@
 
         </div>
         <a class="release-link" href="https://github.com/baomidou/mybatis-plus/releases/tag/v3.5.3.1" target="_blank" rel="noopener">查看完整发布说明 ↗</a>
-      </article>
-
-      <article class="release-card">
-        <div class="release-head">
-          <span class="release-tag">v3.5.3</span>
-          <span class="release-date">2022-12-28</span>
-        </div>
-        <div class="release-body">
-          <p>多租户插件:多表join表名必需起别名,否则追加的过滤条件不带前缀</p>
-<p>InterceptorIgnore 不能过滤 selectKey 的问题</p>
-<p>分页新增informix数据库支持</p>
-<p>分页新增优炫数据库支持</p>
-<p>分页新增TDengine数据库支持</p>
-<p>分页新增亚马逊redshift数据库支持</p>
-<p>支持spring-boot 2.7以上版本</p>
-<p>雪花id新增反解时间戳方法Sequence#parseIdTimestamp</p>
-<p>BaseMapper.selectCount生成语句加入中AS total</p>
-<p>修复IllegalSQLInnerInterceptor类ClassCastException异常，并优化日志</p>
-<p>移除注解OrderBy的过时属性isDesc</p>
-<p>移除TableInfo过时方法</p>
-<p>加入JoinTableInfoInitHandler类参与TableInfo初始化</p>
-<p>修复StringUtils.sqlInjectionReplaceBlank方法过滤sql不全，可能会导致sql注入的情况</p>
-<p>增加IService.lambdaQuery(entity)支持，写法更便捷</p>
-<p>新增数据变更记录（数据审计）插件DataChangeRecorderInnerInterceptor</p>
-<p>新增查询条件方法 notLikeLeft 和 notLikeRight</p>
-<p>数据权限多表解析部分处理优化</p>
-<p>允许子类重写 orderBy 基础方法 gitee issues/I61F51</p>
-<p>新增Db类，调整 SimpleQuery 类</p>
-<p>新增脚本自动维护功能</p>
-<p>新增支持手动拦截器忽略策略，例如 InterceptorIgnoreHelper.handle(IgnoreStrategy.builder().tenantLine(true).build());</p>
-<p>支持 PG 数据字段大写 ID 自增 fixed issues/I4T0YJ</p>
-<p>代码生成器重构完成，合并回 MP 核心代码库</p>
-<p>代码生成器增加是否生成service接口的开关</p>
-
-        </div>
-        <a class="release-link" href="https://github.com/baomidou/mybatis-plus/releases/tag/v3.5.3" target="_blank" rel="noopener">查看完整发布说明 ↗</a>
-      </article>
-
-      <article class="release-card">
-        <div class="release-head">
-          <span class="release-tag">v3.5.1</span>
-          <span class="release-date">2022-02-25</span>
-        </div>
-        <div class="release-body">
-          <p>新增 impala 数据库支~~持</p>
-<p>缓存动态获取数据库类型~~</p>
-<p>新增可控分配 id 方法 fixed github pull/4231</p>
-<p>延迟枚举扫描注册</p>
-<p>乐观锁插件支持根据wrapper填充 github pull/3664</p>
-<p>H2KeyGenerator 语法修改</p>
-<p>SimpleQuery 优化及Bug修改</p>
-<p>fixed gitee issues/I4P9EN</p>
-<p>SybaseDialect 关键词替换优化</p>
-
-        </div>
-        <a class="release-link" href="https://github.com/baomidou/mybatis-plus/releases/tag/v3.5.1" target="_blank" rel="noopener">查看完整发布说明 ↗</a>
       </article>
   </main>
 
