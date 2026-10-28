@@ -17,7 +17,7 @@ jobs:
   build-and-deploy:
     runs-on: ubuntu-latest
     permissions:
-      contents: read
+      contents: write
       pages: write
       id-token: write
     concurrency:
@@ -64,3 +64,25 @@ jobs:
       - name: Deploy
         id: deployment
         uses: actions/deploy-pages@v5
+
+      # 回写生成物并在长期无提交时保活，避免 60 天无活动导致 schedule 被禁用
+      - name: Commit generated files / keepalive
+        if: github.event_name == 'schedule' || github.event_name == 'workflow_dispatch'
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+
+          if [ -n "$(git status --porcelain llm-wiki/llms-full.txt llm-wiki/releases.html llm-wiki/index.html)" ]; then
+            git add llm-wiki/llms-full.txt llm-wiki/releases.html llm-wiki/index.html
+            git commit -m "chore(site): 自动同步文档与 Releases [skip ci]"
+            git push
+            exit 0
+          fi
+
+          last_commit=$(git log -1 --format=%ct)
+          if [ $(( $(date +%s) - last_commit )) -gt $((45 * 86400)) ]; then
+            date -u +"%Y-%m-%dT%H:%M:%SZ" > llm-wiki/.keepalive
+            git add llm-wiki/.keepalive
+            git commit -m "chore(site): keepalive [skip ci]"
+            git push
+          fi
