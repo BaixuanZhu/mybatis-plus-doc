@@ -7399,6 +7399,27 @@ public class QueryWrapperTest {
 
 `BlockAttackInnerInterceptor` 插件是 MyBatis-Plus 提供的一个重要的安全工具，它能够有效地防止全表更新和删除操作，保护数据库免受意外或恶意的数据破坏。通过合理配置和使用该插件，可以显著提高应用程序的数据安全性。
 
+## 安全修复（3.5.18）
+
+> 本段为本站补充说明，官方文档尚未收录。
+
+3.5.18 修复了常量条件绕过全表更新/删除校验的问题。建议升级至 **3.5.18.1 或更高版本**：3.5.18 的 `OR` 组合条件存在空指针问题，已在 3.5.18.1 修复。
+
+修复前，以下条件都会被误判为“存在更新条件”，从而绕过插件：
+
+```sql
+UPDATE user SET name = 'x' WHERE 1;
+UPDATE user SET name = 'x' WHERE 1 <= 1;
+UPDATE user SET name = 'x' WHERE 2 > 1;
+UPDATE user SET name = 'x' WHERE 'a' = 'a';
+UPDATE user SET name = 'x' WHERE NOT 1 = 2;
+UPDATE user SET name = 'x' WHERE 1 XOR 0;
+```
+
+3.5.18 起，插件按数据库真值语义计算常量表达式，覆盖 `=`、`!=`、`<>`、`>`、`>=`、`<`、`<=`、`NOT`、`XOR` 以及裸数值常量（如 `WHERE 1`），上述语句会被拦截并抛出 `MybatisPlusException`。
+
+该插件是兜底防护，不能替代接口鉴权；仍应避免前端传入 SQL 片段，并对写操作做权限校验。
+
 
 ---
 
@@ -7559,6 +7580,28 @@ mybatisConfiguration.addInterceptor(dataPermissionInterceptor);
 ```
 
 通过使用 DataPermissionInterceptor，你可以轻松地在 MyBatis-Plus 应用中实现数据权限控制，确保用户只能访问其权限范围内的数据，从而提高数据的安全性。
+
+## 安全修复（3.5.18）
+
+> 本段为本站补充说明，官方文档尚未收录。
+
+3.5.18 修复了原 `WHERE` 条件包含 `XOR` 时，权限条件未加括号而被短路的问题。建议升级至 **3.5.18.1 或更高版本**。
+
+以原 SQL `SELECT * FROM user WHERE 1 XOR 0` 为例，修复前插件会拼接为：
+
+```sql
+SELECT * FROM user WHERE 1 XOR 0 AND dept_id = ?
+```
+
+由于 `AND` 的优先级高于 `XOR`，实际按 `1 XOR (0 AND dept_id = ?)` 计算，权限条件被短路，可能读取或修改权限范围之外的数据。
+
+3.5.18 起，`XOR` 与 `OR` 等低优先级条件会先加括号，再追加权限条件：
+
+```sql
+SELECT * FROM user WHERE (1 XOR 0) AND dept_id = ?
+```
+
+该修复位于 `DataPermissionInterceptor` 与 `TenantLineInnerInterceptor` 共用的条件拼接逻辑中。升级后建议检查自定义 SQL 中的 `XOR` 用法，并开启 SQL 日志确认拼接结果。
 
 
 ---
@@ -7845,6 +7888,28 @@ static {
 > - 自定义的 SQL 请按规范书写，特别是涉及到多个表的每个表都要给别名，特别是 `inner join` 的要写标准的 `inner join`。
 
 通过以上配置和使用方法，你可以在 MyBatis-Plus 应用中实现多租户的数据隔离，确保每个租户的数据安全。
+
+## 安全修复（3.5.18）
+
+> 本段为本站补充说明，官方文档尚未收录。
+
+3.5.18 修复了原 `WHERE` 条件包含 `XOR` 时，租户条件未加括号而被短路的问题。建议升级至 **3.5.18.1 或更高版本**。
+
+以原 SQL `SELECT * FROM user WHERE 1 XOR 0` 为例，修复前插件会拼接为：
+
+```sql
+SELECT * FROM user WHERE 1 XOR 0 AND tenant_id = ?
+```
+
+由于 `AND` 的优先级高于 `XOR`，实际按 `1 XOR (0 AND tenant_id = ?)` 计算，租户条件被短路，查询、更新或删除可能跨租户生效。
+
+3.5.18 起，`XOR` 与 `OR` 等低优先级条件会先加括号，再追加租户条件：
+
+```sql
+SELECT * FROM user WHERE (1 XOR 0) AND tenant_id = ?
+```
+
+升级后建议检查自定义 SQL 中的 `XOR` 用法，并开启 SQL 日志确认拼接结果。
 
 
 ---
@@ -10821,6 +10886,22 @@ MyBatis-Plus 相关的代码和 Jar 包被别有用心的人提交了 CVE 漏洞
 ---
 
 如果是真正的漏洞问题，我们一定积极修正，但是上面两个如此低级的错误，在没跟我们预先进行沟通的情况下，直接提交了 CVE 漏洞申请，很难让我们相信这些漏洞是好心人善意的提醒，在我们看来，这就是存粹的坏心思。
+
+## 3.5.18 安全修复
+
+> 本段为本站补充说明，官方文档尚未收录。
+
+3.5.18 修复了两个可能导致越权读写的问题，建议升级至 **3.5.18.1 或更高版本**（3.5.18 的 `OR` 组合条件存在空指针问题，已在 3.5.18.1 修复）。
+
+### 全表操作校验可被常量条件绕过（BlockAttackInnerInterceptor）
+
+`BlockAttackInnerInterceptor` 此前只识别 `1=1`、`1<>2` 等简单常量比较，`WHERE 1`、`1 <= 1`、`2 > 1`、`'a' = 'a'`、`NOT 1 = 2`、`1 XOR 0` 等写法可绕过校验，执行全表更新或删除。3.5.18 起按数据库真值语义计算常量表达式，上述条件会被拦截。
+
+### 租户/数据权限条件在 XOR 下被短路（TenantLineInnerInterceptor、DataPermissionInterceptor）
+
+原 `WHERE` 条件为 `XOR` 表达式时，插件追加 `AND tenant_id = ?` 或权限条件时未加括号。由于 `AND` 优先级更高，条件被短路，可能读写租户或权限范围之外的数据。3.5.18 起 `OR`、`XOR` 等低优先级条件都会先加括号再追加。
+
+详细说明与示例见本站文档 `plugins/block-attack.md`、`plugins/tenant.md`、`plugins/data-permission.md` 的“安全修复（3.5.18）”一节。
 
 
 ---

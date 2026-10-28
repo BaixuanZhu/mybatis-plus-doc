@@ -5,6 +5,7 @@
  * 数据来源：
  * 1. baomidou.com — 爬取已渲染的 HTML 页面（MyBatis-Plus 文档），cheerio 解析转为 Markdown
  * 2. 本地 Markdown — llm-wiki/mybatis-native/ 目录（MyBatis 原生 XML Mapper 语法）
+ * 3. 本地安全补充 — llm-wiki/advisories/<group>/<slug>.md（追加到对应爬取页面）
  * 
  * 生成物：llms.txt（索引）/ llms-full.txt（聚合）/ docs/（清洗版单篇）
  */
@@ -19,6 +20,7 @@ const OUTPUT_DIR = path.join(__dirname, '..');           // llm-wiki/
 const REPO_ROOT = path.join(__dirname, '..', '..');       // 仓库根
 const DOCS_DIR = path.join(REPO_ROOT, 'docs');            // 仓库根/docs/
 const LOCAL_NATIVE_DIR = path.join(OUTPUT_DIR, 'mybatis-native'); // llm-wiki/mybatis-native/
+const ADVISORIES_DIR = path.join(OUTPUT_DIR, 'advisories');     // llm-wiki/advisories/
 
 // ── 侧边栏配置（分组 + 页面 slug）──
 // 标题从页面 <h1> 自动提取
@@ -516,6 +518,14 @@ function processLocalMarkdown(slug) {
   return { title, body: body.trim() + '\n' };
 }
 
+function applyAdvisory(groupDir, slug, body) {
+  const advisoryPath = path.join(ADVISORIES_DIR, groupDir, `${slug}.md`);
+  if (!fs.existsSync(advisoryPath)) return body;
+
+  const advisory = fs.readFileSync(advisoryPath, 'utf-8').trim();
+  return body.trimEnd() + '\n\n' + advisory + '\n';
+}
+
 // ── 主函数 ──
 
 async function main() {
@@ -569,6 +579,9 @@ async function main() {
           body = result.body;
           sourceUrl = url;
         }
+
+        // 追加本地安全补充
+        body = applyAdvisory(group.dir, slug, body);
 
         // 写入单篇
         fs.mkdirSync(outDir, { recursive: true });
