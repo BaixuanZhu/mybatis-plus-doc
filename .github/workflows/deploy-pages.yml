@@ -72,6 +72,12 @@ jobs:
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
 
+          # 同步时间戳每天都会变，忽略它以免产生无意义提交
+          if [ -n "$(git status --porcelain llm-wiki/releases.html)" ] \
+            && git diff --quiet -I 'class="synced"' -- llm-wiki/releases.html; then
+            git checkout -- llm-wiki/releases.html
+          fi
+
           if [ -n "$(git status --porcelain llm-wiki/llms-full.txt llm-wiki/releases.html llm-wiki/index.html)" ]; then
             git add llm-wiki/llms-full.txt llm-wiki/releases.html llm-wiki/index.html
             git commit -m "chore(site): 自动同步文档与 Releases [skip ci]"
